@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TEMP">
+
+
+    	<resultMap id="tempMap" type="tempVO">
+    	    <result property="tempStr" 		column="tempstr"/>
+    	    <result property="tempNum" 	column="tempnum"/>                                     
+    	</resultMap>                               
+
+
+
+    	<sql id="tempSql">
+			SELECT 
+				TEMPSTR
+				, TEMPNUM
+			FROM TEMP
+		</sql>
+		
+		<select id="selectTemp" parameterType="tempVO" resultMap="tempMap">
+			<include refid="tempSql" />
+			WHERE 
+				TEMPSTR = #{tempStr}   	    
+    	</select>
+		
+    		
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MEMBER">
+
+    	<resultMap id="memberMap" type="memberVO">
+    	    <result property="mId" 			column="M_ID" />
+    	    <result property="mName" 		column="M_NAME" />                                   
+    	    <result property="mBirth" 		column="M_BIRTH" />                                     
+    	    <result property="mJoinDate" 	column="M_JOINDATE" />                                     
+    	    <result property="mAddr" 		column="M_ADDR" />                                     
+    	    <result property="mPhone" 		column="M_PHONE" />                                     
+    	    <result property="mMail" 		column="M_MAIL" />                                     
+    	    <result property="mLimit" 		column="M_LIMIT" />                                     
+    	    <result property="mOutDate" 	column="M_OUTDATE" />                                     
+    	    <result property="mStatus" 		column="M_STATUS" />                                                                        
+    	</resultMap>                               
+
+    	<sql id="memberSql">
+			SELECT
+				M_ID
+				, M_NAME
+				, M_BIRTH
+				, M_JOINDATE
+				, M_ADDR
+				, M_PHONE
+				, M_MAIL
+				, M_LIMIT
+				, M_OUTDATE
+				, M_STATUS
+			FROM
+				MEMBER		
+		</sql>
+		
+		<select id="selectMemberList" parameterType="memberVO" resultMap="memberMap">
+			<include refid="memberSql" />
+    		WHERE
+    			M_ID LIKE '%'||#{mId}||'%'
+    	</select>
+    	
+    	<select id="listCountWithNameAndPhone" parameterType="memberVO" resultType="Integer">
+  			SELECT COUNT(0) TOTALCNT
+  				FROM(
+  					<include refid="memberSql" />
+  					WHERE M_NAME = #{mName, jdbcType=VARCHAR} 
+  						AND M_PHONE = #{mPhone, jdbcType=VARCHAR}
+  				)  	
+    	</select>
+    	
+    	<select id="selectOneOfMember" parameterType="memberVO" resultMap="memberMap">
+    		<include refid="memberSql" />
+    		WHERE
+    			M_ID = #{mId}
+    	</select>
+    	
+    	<insert id="addMember" parameterType="memberVO">
+    		INSERT INTO MEMBER(M_ID, M_NAME, M_BIRTH, M_JOINDATE, M_ADDR, M_PHONE, M_MAIL, M_LIMIT, M_OUTDATE, M_STATUS)
+    			VALUES (
+    				#{mId, jdbcType=VARCHAR}
+    				, #{mName, jdbcType=VARCHAR}
+    				, #{mBirth, jdbcType=VARCHAR}
+    				, #{mJoinDate, jdbcType=VARCHAR}
+    				, #{mAddr, jdbcType=VARCHAR}
+    				, #{mPhone, jdbcType=VARCHAR}
+    				, #{mMail, jdbcType=VARCHAR}
+    				, #{mLimit, jdbcType=INTEGER}
+    				, #{mOutDate, jdbcType=VARCHAR}
+    				, #{mStatus, jdbcType=VARCHAR}
+    			)
+    	</insert>
+    	
+    	<update id="updateMember" parameterType="memberVO">
+    		UPDATE MEMBER
+			  SET
+			    M_NAME = #{mName, jdbcType=VARCHAR}
+			    , M_BIRTH = #{mBirth, jdbcType=VARCHAR}
+			    , M_JOINDATE = #{mJoinDate, jdbcType=VARCHAR}
+			    , M_ADDR = #{mAddr, jdbcType=VARCHAR}
+			    , M_PHONE = #{mPhone, jdbcType=VARCHAR}
+			    , M_MAIL = #{mMail, jdbcType=VARCHAR}
+			    , M_LIMIT = #{mLimit, jdbcType=INTEGER}
+			    , M_OUTDATE = #{mOutDate, jdbcType=VARCHAR}
+			    , M_STATUS = #{mStatus, jdbcType=VARCHAR}
+			  WHERE
+			    M_ID = #{mId, jdbcType=VARCHAR}
+    	</update>
+    	
+    	<update id="leaveMember" parameterType="memberVO">
+    		UPDATE MEMBER
+    			SET
+    				M_STATUS = #{mStatus, jdbcType=VARCHAR}
+    			WHERE
+    				M_ID = #{mId, jdbcType=VARCHAR}
+    	</update>
+    	
+    	
+    	<delete id="delMember" parameterType="memberVO">
+    		DELETE MEMBER WHERE M_ID = #{mId, jdbcType=VARCHAR}
+    	</delete>
+    	
+</mapper>
