@@ -3,7 +3,7 @@ package net.gentledot.rental.vo;
 import lombok.Data;
 
 //@Data
-public class MemberVO {
+public class MemberVO extends PaginationVO {
 	private String mId;      
 	private String mName;    
 	private String mBirth;   

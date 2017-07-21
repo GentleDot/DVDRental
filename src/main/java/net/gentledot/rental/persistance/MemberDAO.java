@@ -8,33 +8,37 @@ import egovframework.rte.psl.dataaccess.EgovAbstractMapper;
 import net.gentledot.rental.vo.MemberVO;
 import net.gentledot.rental.vo.TempVO;
 
-@Repository(value = "memberDao")
+@Repository("memberDao")
 public class MemberDAO extends EgovAbstractMapper {
-	List<MemberVO> selectMemberList(MemberVO vo){
+	public List<MemberVO> selectMemberList(MemberVO vo){
 		return selectList("selectMemberList", vo);
 	}
 	
-	int listCountWithNameAndPhone(MemberVO vo){
+	public int totalCountOfMemberList(MemberVO vo){
+		return selectOne("totalCountOfMemberList", vo);
+	}
+	
+	public int listCountWithNameAndPhone(MemberVO vo){
 		return selectOne("listCountWithNameAndPhone", vo);
 	}
 	
-	MemberVO selectOneOfMember(MemberVO vo){
+	public MemberVO selectOneOfMember(MemberVO vo){
 		return selectOne("selectOneOfMember", vo);
 	}
 	
-	int addMember(MemberVO vo){
+	public int addMember(MemberVO vo){
 		return insert("addMember", vo);
 	}
 	
-	int updateMember(MemberVO vo){
+	public int updateMember(MemberVO vo){
 		return update("updateMember", vo);
 	}
 	
-	int leaveMember(MemberVO vo){
+	public int leaveMember(MemberVO vo){
 		return update("leaveMember", vo);
 	}
 	
-	int delMember(MemberVO vo){
+	public int delMember(MemberVO vo){
 		return delete("delMember", vo);
 	}
 }

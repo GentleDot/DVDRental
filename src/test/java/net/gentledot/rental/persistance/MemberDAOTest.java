@@ -38,7 +38,7 @@ public class MemberDAOTest {
 	private static final Logger LOGGER = Logger.getLogger(MemberDAOTest.class);
 	
 	@Resource(name = "memberDao")
-	private MemberDAO dao;
+	MemberDAO dao;
 	
 	private MemberVO vo;
 

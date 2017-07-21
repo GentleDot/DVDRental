@@ -46,6 +46,13 @@
   				)  	
     	</select>
     	
+    	<select id="totalCountOfMemberList" parameterType="memberVO" resultType="Integer">
+  			SELECT COUNT(0) TOTALCNT
+  				FROM(
+  					<include refid="memberSql" />
+  				)  	
+    	</select>
+    	
     	<select id="selectOneOfMember" parameterType="memberVO" resultMap="memberMap">
     		<include refid="memberSql" />
     		WHERE
