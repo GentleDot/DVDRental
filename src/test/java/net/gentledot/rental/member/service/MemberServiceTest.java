@@ -76,7 +76,6 @@ public class MemberServiceTest {
 		
 		assertThat(resultMap.containsKey("resultList"), is(true));
 		assertThat(resultMap.containsKey("pagination"), is(true));
-		
 	}
 	
 }

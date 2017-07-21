@@ -2,8 +2,16 @@ package net.gentledot.rental.member.service;
 
 import java.util.Map;
 
+import net.gentledot.rental.vo.MemberVO;
+
 public interface MemberService {
 
-	Map<String, Object> getMemberList(String mId, int pageSize, int pageNo, int pageRange);
+	public Map<String, Object> getMemberList(String mId, int pageSize, int pageNo, int pageScope);
+	public int listCountWithNameAndPhone(MemberVO vo);
+	public MemberVO selectOneOfMember(MemberVO vo);
+	public int addMember(MemberVO vo);
+	public int updateMember(MemberVO vo);
+	public int leaveMember(MemberVO vo);
+	public int delMember(MemberVO vo);
 	
 }

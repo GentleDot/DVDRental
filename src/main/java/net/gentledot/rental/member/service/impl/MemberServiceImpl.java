@@ -1,7 +1,5 @@
 package net.gentledot.rental.member.service.impl;
 
-import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +20,7 @@ public class MemberServiceImpl implements MemberService{
 	@Resource(name="memberDao")
 	MemberDAO memberDao;
 	
-	public Map<String, Object> getMemberList(String mId, int pageSize, int pageNo, int pageRange){
+	public Map<String, Object> getMemberList(String mId, int pageSize, int pageNo, int pageScope){
 		// list 생성
 		MemberVO vo = new MemberVO();
 		vo.setmId(mId);
@@ -33,7 +31,7 @@ public class MemberServiceImpl implements MemberService{
 		
 		// pagination 생성
 		int totalCnt = memberDao.totalCountOfMemberList(vo);
-		Pagination pag = new Pagination(pageSize, pageNo, pageRange, totalCnt);
+		Pagination pag = new Pagination(pageSize, pageNo, pageScope, totalCnt);
 		pag.setPaging();
 		
 		// return 할 map에 list와 pagination 담기
