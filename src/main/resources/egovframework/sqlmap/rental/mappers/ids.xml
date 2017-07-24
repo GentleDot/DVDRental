@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="IDS">
+
+	<resultMap id="idsMap" type="idsVO">
+	    <result property="tableName" 	column="TABLE_NAME" />
+	    <result property="nextId" 		column="NEXT_ID" />                                                                                                        
+	</resultMap>                               
+
+	<select id="getNextId" parameterType="String" resultType="String">
+		SELECT NEXT_ID
+			FROM IDS
+			WHERE TABLE_NAME = #{tableName}
+	</select>
+	
+	<insert id="addNextId" parameterType="idsVO">
+		INSERT INTO IDS
+    		VALUES(#{tableName, jdbcType=VARCHAR}, #{nextId, jdbcType=INTEGER})
+	</insert>
+	
+	<update id="updateNextId">
+		UPDATE IDS
+			SET
+				NEXT_ID = NEXT_ID + 1
+			WHERE TABLE_NAME = #{tableName, jdbcType=VARCHAR}
+	</update>
+	
+</mapper>

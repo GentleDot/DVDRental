@@ -80,10 +80,44 @@ public class MemberControllerTest {
 					.andExpect(status().isOk())
 					.andExpect(model().attributeExists("resultList"))
 					.andExpect(model().attributeExists("pagination"))
-					.andExpect(model().attributeExists("mId"))
+					.andExpect(model().attributeExists("keyword"))
+					.andExpect(model().attributeExists("category"))
 					.andExpect(model().attributeExists("pageNo"));
 		
 	}
+	
+	@Test
+	public void addMemberInList() throws Exception{
+		String mId = "";      
+		String mName = "";    
+		String mBirth = "";   
+		String mJoinDate = "";
+		String mAddr = "";    
+		String mPhone = "";   
+		String mMail = "";
+		
+		MemberVO insertVO = new MemberVO();
+		insertVO.setmId(mId);
+		insertVO.setmName(mName);
+		insertVO.setmBirth(mBirth);
+		insertVO.setmJoinDate(mJoinDate);
+		insertVO.setmAddr(mAddr);
+		insertVO.setmPhone(mPhone);
+		insertVO.setmMail(mMail);
+		
+		when(service.addMember((MemberVO) anyObject())).thenReturn(1);
+		
+		mockMvc.perform(get("/member/memberList.do"))
+					.andExpect(status().isOk())
+					.andExpect(model().attributeExists("resultList"))
+					.andExpect(model().attributeExists("pagination"))
+					.andExpect(model().attributeExists("keyword"))
+					.andExpect(model().attributeExists("category"))
+					.andExpect(model().attributeExists("pageNo"));
+		
+	}
+	
+	
 	
 
 }

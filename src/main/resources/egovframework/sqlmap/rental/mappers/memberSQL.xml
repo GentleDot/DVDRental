@@ -32,9 +32,33 @@
 		</sql>
 		
 		<select id="selectMemberList" parameterType="memberVO" resultMap="memberMap">
-			<include refid="memberSql" />
-    		WHERE
-    			M_ID LIKE '%'||#{mId}||'%'
+			SELECT *
+				FROM (
+					SELECT ROWNUM rn, a.*
+						FROM (
+							<include refid="memberSql" />
+							WHERE M_ID LIKE '%'||#{mId}||'%'
+						) a
+				)
+			WHERE
+				ROWNUM <![CDATA[<=]]> #{pageSize}
+					AND rn <![CDATA[>]]> (#{pageNo} - 1) * #{pageSize}
+					
+    	</select>
+    	
+    	<select id="selectMemberListByName" parameterType="memberVO" resultMap="memberMap">
+			SELECT *
+				FROM (
+					SELECT ROWNUM rn, a.*
+						FROM (
+							<include refid="memberSql" />
+							WHERE M_NAME LIKE '%'||#{mName}||'%'
+						) a
+				)
+			WHERE
+				ROWNUM <![CDATA[<=]]> #{pageSize}
+					AND rn <![CDATA[>]]> (#{pageNo} - 1) * #{pageSize}
+					
     	</select>
     	
     	<select id="listCountWithNameAndPhone" parameterType="memberVO" resultType="Integer">
@@ -69,9 +93,9 @@
     				, #{mAddr, jdbcType=VARCHAR}
     				, #{mPhone, jdbcType=VARCHAR}
     				, #{mMail, jdbcType=VARCHAR}
-    				, #{mLimit, jdbcType=INTEGER}
-    				, #{mOutDate, jdbcType=VARCHAR}
-    				, #{mStatus, jdbcType=VARCHAR}
+    				, '5'
+    				, ''
+    				, 'M'
     			)
     	</insert>
     	

@@ -8,5 +8,6 @@
 		<typeAlias alias="sampleVO" type="egovframework.example.sample.service.SampleVO"/> -->
 		<typeAlias alias="tempVO" type="net.gentledot.rental.vo.TempVO"/>
 		<typeAlias alias="memberVO" type="net.gentledot.rental.vo.MemberVO"/>
+		<typeAlias alias="idsVO" type="net.gentledot.rental.vo.IdsVO"/>
     </typeAliases>
 </configuration>

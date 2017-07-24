@@ -22,11 +22,17 @@
     -->
     
     <!-- oracle -->
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
         <property name="url" value="jdbc:oracle:thin:@192.168.1.105:1521:orcl" />
         <property name="username" value="dvd_owner"/>
         <property name="password" value="1111"/>
+    </bean>-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl" />
+        <property name="username" value="projectD"/>
+        <property name="password" value="pro2017"/>
     </bean>
    
     

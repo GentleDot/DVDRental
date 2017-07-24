@@ -63,9 +63,9 @@ public class MemberDAOTest {
 		vo.setmPhone("01022223333");
 		vo.setmMail("test@test.te");
 		// 빌릴 수 있는 한도 (최대 5)
-		vo.setmLimit("5");
+//		vo.setmLimit("5");
 		// 회원 상태 : M = 회원, O = 탈퇴
-		vo.setmStatus("M");
+//		vo.setmStatus("M");
 		
 		int resultStatus = dao.addMember(vo);
 		
@@ -103,7 +103,31 @@ public class MemberDAOTest {
 			dao.addMember(tempVO);
 		}
 		vo.setmId("");
+		vo.setPageNo(1);
+		vo.setPageSize(10);
 		List<MemberVO> resultList = dao.selectMemberList(vo);
+		
+		assertThat(resultList.size(), is(10));
+	}
+	
+	@Rollback(true)
+	@Test
+	public void selectMemberListByNameTest(){
+		// mId를 170700001 부터 170700010까지 입력
+		// mName은 test1 부터 test10까지
+		for(int i = 1; i <= 10; i++){
+			MemberVO tempVO = new MemberVO();
+			NumberFormat nf = new DecimalFormat("00000");
+			String idStr = nf.format(i);
+			tempVO.setmId("1707" + idStr);
+			tempVO.setmName("test" + i);
+			
+			dao.addMember(tempVO);
+		}
+		vo.setmName("");
+		vo.setPageNo(1);
+		vo.setPageSize(10);
+		List<MemberVO> resultList = dao.selectMemberListByName(vo);
 		
 		assertThat(resultList.size(), is(10));
 	}
@@ -137,6 +161,24 @@ public class MemberDAOTest {
 		int resultCount = dao.listCountWithNameAndPhone(vo);
 		
 		assertThat(resultCount, is(1));
+	}
+	
+	/*회원 수 확인 테스트*/
+	@Rollback(true)
+	@Test
+	public void totalCountOfMemberListTest(){
+		// mId를 170700001 부터 170700010까지 입력
+		for(int i = 1; i <= 10; i++){
+			MemberVO tempVO = new MemberVO();
+			NumberFormat nf = new DecimalFormat("00000");
+			String idStr = nf.format(i);
+			tempVO.setmId("1707" + idStr);		
+			dao.addMember(tempVO);
+		}
+		
+		int totalCnt = dao.totalCountOfMemberList();
+		
+		assertThat(totalCnt, is(10));
 	}
 	
 	/*회원 정보 업데이트 테스트*/

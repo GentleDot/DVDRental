@@ -13,9 +13,12 @@ public class MemberDAO extends EgovAbstractMapper {
 	public List<MemberVO> selectMemberList(MemberVO vo){
 		return selectList("selectMemberList", vo);
 	}
+	public List<MemberVO> selectMemberListByName(MemberVO vo){
+		return selectList("selectMemberListByName", vo);
+	}
 	
-	public int totalCountOfMemberList(MemberVO vo){
-		return selectOne("totalCountOfMemberList", vo);
+	public int totalCountOfMemberList(){
+		return selectOne("totalCountOfMemberList");
 	}
 	
 	public int listCountWithNameAndPhone(MemberVO vo){
