@@ -6,8 +6,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +28,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import net.gentledot.ids.service.IdsService;
 import net.gentledot.rental.member.service.MemberService;
 import net.gentledot.rental.vo.MemberVO;
 import net.gentledot.utils.Pagination;
@@ -47,6 +47,9 @@ public class MemberControllerTest {
 	
 	@Mock
 	MemberService service;
+	
+	@Mock
+	IdsService idsService;
 	
 	/*@Autowired
 	private WebApplicationContext context;*/
@@ -107,16 +110,65 @@ public class MemberControllerTest {
 		
 		when(service.addMember((MemberVO) anyObject())).thenReturn(1);
 		
-		mockMvc.perform(get("/member/memberList.do"))
-					.andExpect(status().isOk())
-					.andExpect(model().attributeExists("resultList"))
-					.andExpect(model().attributeExists("pagination"))
-					.andExpect(model().attributeExists("keyword"))
-					.andExpect(model().attributeExists("category"))
-					.andExpect(model().attributeExists("pageNo"));
+		mockMvc.perform(get("/member/addMember.do"))
+					.andExpect(status().is3xxRedirection())
+					.andExpect(redirectedUrl("/member/memberList.do"));
 		
 	}
 	
+	@Test
+	public void selectOneOfMemberTest() throws Exception{
+		when(service.selectOneOfMember((MemberVO) anyObject())).thenReturn(new MemberVO());
+		
+		mockMvc.perform(get("/member/memberInfo.do")
+							.param("mid", "170700001"))
+					.andExpect(status().isOk())
+					.andExpect(model().attributeExists("oneOfMember"));
+		
+	}
+	
+	@Test
+	public void updateMemberInfoViewTest() throws Exception{
+		when(service.selectOneOfMember((MemberVO) anyObject())).thenReturn(new MemberVO());
+		
+		MemberVO vo = new MemberVO();
+		vo.setmId("170700001");
+		
+		MemberVO selectVO = service.selectOneOfMember(vo);
+		
+		mockMvc.perform(get("/member/memberModifyView.do")
+				.param("mid", "170700001"))
+		.andExpect(status().isOk())
+		.andExpect(model().attributeExists("oneOfMember"));
+		
+	}
+	
+	@Test
+	public void updateMemberInfoTest() throws Exception{
+		String mId = "";      
+		String mName = "";    
+		String mBirth = "";   
+		String mJoinDate = "";
+		String mAddr = "";    
+		String mPhone = "";   
+		String mMail = "";
+		
+		MemberVO insertVO = new MemberVO();
+		insertVO.setmId(mId);
+		insertVO.setmName(mName);
+		insertVO.setmBirth(mBirth);
+		insertVO.setmJoinDate(mJoinDate);
+		insertVO.setmAddr(mAddr);
+		insertVO.setmPhone(mPhone);
+		insertVO.setmMail(mMail);
+		
+		when(service.updateMember((MemberVO) anyObject())).thenReturn(1);
+		
+		mockMvc.perform(get("/member/memberModifyView.do"))
+					.andExpect(status().is3xxRedirection())
+					.andExpect(redirectedUrl("/member/memberList.do"));
+		
+	}
 	
 	
 

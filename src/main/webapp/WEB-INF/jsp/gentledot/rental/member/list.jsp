@@ -44,11 +44,15 @@
 							<input type="submit" class="btn btn-default" value="검색"/>
 						</div>
 					</fieldset>
+					<input type="hidden" name="pageNo" value="${pagination.pageNo}">
 				</form>
 			</div>
 		</section>
 		<section class="row">
 			<div class="col-md-12">
+				<div class="text-right">
+					<a href="<%= contextPath %>/member/addMemberView.do" class="btn btn-success">회원 추가</a>
+				</div>
 				<table class="table table-bordered">
 					<caption class="sr-only">DVD 대여점 회원 목록</caption>
 					<thead>
@@ -67,16 +71,30 @@
 					<tbody>
 					<% for(MemberVO member : resultList){ %>
 						<tr>
-							<td><%=Tools.customToEmptyBlank(member.getmId(), "")%></td>
-							<td><%=Tools.customToEmptyBlank(member.getmName(), "")%></td>
-							<td><%=Tools.customToEmptyBlank(member.getmBirth(), "")%></td>
-							<td><%=Tools.customToEmptyBlank(member.getmJoinDate(), "")%></td>
-							<td><%=Tools.customToEmptyBlank(member.getmPhone(), "")%></td>
-							<td><%=Tools.customToEmptyBlank(member.getmLimit(), "0")%></td>
+							<td>
+								<a href="<%= contextPath %>/member/memberInfo.do?mId=<%=Tools.customToEmptyBlank(member.getmId(), "")%>"><%=Tools.customToEmptyBlank(member.getmId(), "")%></a>
+							</td>
+							<td>
+								<a href="<%= contextPath %>/member/memberInfo.do?mId=<%=Tools.customToEmptyBlank(member.getmId(), "")%>"><%=Tools.customToEmptyBlank(member.getmName(), "")%></a>
+							</td>
+							<td><%=Tools.customToEmptyBlank(member.getmBirth(), "")%>
+							</td>
+							<td><%=Tools.customToEmptyBlank(member.getmJoinDate(), "")%>
+							</td>
+							<td><%=Tools.customToEmptyBlank(member.getmPhone(), "")%>
+							</td>
+							<td><%=Tools.customToEmptyBlank(member.getmLimit(), "0")%>
+							</td>
 						</tr>
 					<% }%>
 					</tbody>
 				</table>
+
+				<% if (resultList.size() <= 0){ %>
+				<div class="text-center">
+					<span class="text-danger">조회한 값의 데이터가 없습니다.</span>
+				</div>
+				<% } %>
 
 				<div>
 					<jsp:include page="/WEB-INF/jsp/gentledot/inc/pagination.jsp">
@@ -98,4 +116,13 @@
 </body>
 <script src="<%=contextPath%>/webjars/jquery/3.2.1/jquery.min.js"></script>
 <script src="<%=contextPath%>/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+<script>
+    function goPage(pageNo){
+        document.sendSearchKeyword.pageNo.value = pageNo;
+        document.sendSearchKeyword.submit();
+    }
+    $("input:submit").click(function(){
+        $("input[name='pageNo']").val(1);
+    });
+</script>
 </html>

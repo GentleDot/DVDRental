@@ -1,6 +1,9 @@
 package net.gentledot.rental.member.service.impl;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +12,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import net.gentledot.ids.service.IdsService;
 import net.gentledot.rental.member.service.MemberService;
 import net.gentledot.rental.persistance.MemberDAO;
 import net.gentledot.rental.vo.MemberVO;
@@ -19,6 +23,10 @@ public class MemberServiceImpl implements MemberService{
 	
 	@Resource(name="memberDao")
 	MemberDAO memberDao;
+	
+	@Resource(name="idsService")
+	IdsService idsService;
+	
 	
 	public Map<String, Object> getMemberList(String mId, int pageSize, int pageNo, int pageScope){
 		// list 생성
@@ -75,6 +83,25 @@ public class MemberServiceImpl implements MemberService{
 	}
 	
 	public int addMember(MemberVO vo){
+		String tableName = "member";
+		String getId = idsService.getNextId(tableName);
+		
+		int idNum = Integer.parseInt(getId);
+		
+		Calendar cal = Calendar.getInstance();
+		int curYear = cal.get(Calendar.YEAR);
+		int curMonth = cal.get(Calendar.MONTH) + 1;
+		
+		NumberFormat monthNf = new DecimalFormat("00");
+		String customYear = String.valueOf(curYear).substring(2);
+		String customMonth = monthNf.format(curMonth);
+		
+		NumberFormat nf = new DecimalFormat("00000");
+		String idStr = nf.format(idNum);
+		String mId = customYear + customMonth + idStr;
+		
+		vo.setmId(mId);
+		
 		return memberDao.addMember(vo);
 	}
 	

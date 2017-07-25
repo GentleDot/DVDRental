@@ -2,21 +2,28 @@
 <%@ page import="java.util.List" %>
 <%@ page import="org.springframework.web.servlet.support.RequestContextUtils" %>
 <%@ page import="net.gentledot.utils.Tools" %>
+<%@ page import="java.util.Calendar" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.text.DecimalFormat" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko-KR">
 <%
 	String contextPath = request.getContextPath();
-	List<MemberVO> resultList = (List<MemberVO>) request.getAttribute("resultList");
-	String keyword = (String) request.getAttribute("keyword");
-	String category = (String) request.getAttribute("category");
-	int pageNo = (Integer) request.getAttribute("pageNo");
+	Calendar calendar = Calendar.getInstance();
+	int curYear = calendar.get(Calendar.YEAR);
+	int curMonth = calendar.get(Calendar.MONTH) + 1;
+	int curDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+	NumberFormat nf = new DecimalFormat("00");
+
+	String curDate = "" + curYear + nf.format(curMonth) + nf.format(curDay);
 %>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="<%=contextPath%>/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css">
-<title>회원 목록 조회</title>
+<title>회원 정보 입력</title>
 	<style>
 		.row{
 			margin-bottom: 1em;
@@ -28,68 +35,43 @@
 	<header></header>
 	<section class="main">
 		<section class="row">
-			<div class="col-md-12">
-				<h2>회원 목록</h2>
-				<form action="<%= contextPath %>/member/memberList.do" method="post" class="form-inline" name="sendSearchKeyword">
-					<fieldset class="form-group">
-						<legend>회원 검색</legend>
-						<div class="form-group">
-							<select name="category" id="category" class="form-control">
-								<option value="id" selected>회원 ID</option>
-								<option value="name">회원 이름</option>
-							</select>
-							<input type="text" id="keyword" class="form-control" name="keyword"/>
-						</div>
-						<div class="form-group">
-							<input type="submit" class="btn btn-default" value="검색"/>
-						</div>
-					</fieldset>
+			<div class="col-md-6 col-md-offset-3">
+				<h2 class="h2">회원가입 (추가)</h2>
+				<form action="<%= contextPath %>/member/addMember.do" method="post" class="form-horizontal" name="addMemberForm">
+					<ul class="list-group">
+						<li class="list-group-item form-group">
+							<label for="inputMName">회원 이름 : </label>
+							<input type="text" id="inputMName" name="inputMName" class="form-control" />
+						</li>
+						<li class="list-group-item form-group">
+							<label for="inputMBirth">회원 생일 : </label>
+							<input type="date" id="inputMBirth" name="inputMBirth" class="form-control" />
+						</li>
+						<li class="list-group-item form-group">
+							<label for="inputMJoinDate">가입일 : </label>
+							<input type="text" id="inputMJoinDate" name="inputMJoinDate" class="form-control" value="<%= curDate %>" readonly />
+						</li>
+						<li class="list-group-item form-group">
+							<label for="inputMAddr">주소 : </label>
+							<input type="text" id="inputMAddr" name="inputMAddr" class="form-control" />
+						</li>
+						<li class="list-group-item form-group">
+							<label for="inputMPhone">전화번호 : </label>
+							<input type="number" id="inputMPhone" name="inputMPhone" class="form-control" min="0" />
+						</li>
+						<li class="list-group-item form-group">
+							<label for="inputMMail">이메일 : </label>
+							<input type="email" id="inputMMail" name="inputMMail" class="form-control" />
+						</li>
+						<li class="list-group-item form-group">
+							<label for="chkEmail">이메일 확인 : </label>
+							<input type="email" id="chkEmail" name="chkEmail" class="form-control" />
+						</li>
+					</ul>
+					<div class="form-group">
+						<input type="submit" class="form-control btn btn-success" value="확인">
+					</div>
 				</form>
-			</div>
-		</section>
-		<section class="row">
-			<div class="col-md-12">
-				<table class="table table-bordered">
-					<caption class="sr-only">DVD 대여점 회원 목록</caption>
-					<thead>
-					<tr>
-						<th>ID</th>
-						<th>이름</th>
-						<th>생년월일</th>
-						<th>가입일</th>
-						<th>연락처</th>
-						<th>대여 가능 개수</th>
-					</tr>
-					</thead>
-					<tfoot>
-
-					</tfoot>
-					<tbody>
-					<% for(MemberVO member : resultList){ %>
-						<tr>
-							<td><%=Tools.customToEmptyBlank(member.getmId(), "")%></td>
-							<td><%=Tools.customToEmptyBlank(member.getmName(), "")%></td>
-							<td><%=Tools.customToEmptyBlank(member.getmBirth(), "")%></td>
-							<td><%=Tools.customToEmptyBlank(member.getmJoinDate(), "")%></td>
-							<td><%=Tools.customToEmptyBlank(member.getmPhone(), "")%></td>
-							<td><%=Tools.customToEmptyBlank(member.getmLimit(), "0")%></td>
-						</tr>
-					<% }%>
-					</tbody>
-				</table>
-
-				<div>
-					<jsp:include page="/WEB-INF/jsp/gentledot/inc/pagination.jsp">
-						<jsp:param name="firstPageNo" value="${pagination.firstPageNo}" />
-						<jsp:param name="prevPageNo" value="${pagination.prevPageNo}" />
-						<jsp:param name="startPageNo" value="${pagination.startPageNo}" />
-						<jsp:param name="pageNo" value="${pagination.pageNo}" />
-						<jsp:param name="endPageNo" value="${pagination.endPageNo}" />
-						<jsp:param name="nextPageNo" value="${pagination.nextPageNo}" />
-						<jsp:param name="finalPageNo" value="${pagination.finalPageNo}" />
-					</jsp:include>
-				</div>
-
 			</div>
 		</section>
 	</section>
