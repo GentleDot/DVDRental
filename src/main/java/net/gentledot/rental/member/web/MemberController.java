@@ -143,10 +143,15 @@ public class MemberController {
 	
 	@RequestMapping("/member/memberModify.do")
 	public String updateMemberInfo(@RequestParam HashMap<String, String> req, ModelMap model){
+		
+		LOGGER.debug("======================");
+		LOGGER.debug("넘어온 phone 값 : " + req.get("getMPhone"));
+		LOGGER.debug("======================");
+		
 		String mId = Tools.customToEmptyBlank(req.get("getMId"),"");
 		String mName = Tools.customToEmptyBlank(req.get("getMName"),"");
-		String mBirth = Tools.customToEmptyBlank(req.get("getMBirth"),"99999999");
-		String mJoinDate = Tools.customToEmptyBlank(req.get("getMJoinDate"),"");
+		String mBirthStr = Tools.customToEmptyBlank(req.get("getMBirth"),"9999-99-99");
+		String mJoinDateStr = Tools.customToEmptyBlank(req.get("getMJoinDate"),"9999-99-99");
 		String mAddr = Tools.customToEmptyBlank(req.get("getMAddr"),"");
 		String mPhone = Tools.customToEmptyBlank(req.get("getMPhone"),"");
 		String mMail = Tools.customToEmptyBlank(req.get("getMMail"),"");
@@ -154,10 +159,23 @@ public class MemberController {
 		String mStatusStr = Tools.customToEmptyBlank(req.get("getMStatus"),"회원");
 		String mOutdateStr = Tools.customToEmptyBlank(req.get("getMOutdate"),"");
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
+		Date tempBirth= null;
+		Date tempJoindate= null;
+		try {
+			tempBirth = sdf.parse(mBirthStr);
+			tempJoindate = sdf.parse(mJoinDateStr);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String mBirth = sdf2.format(tempBirth);
+		String mJoindate = sdf2.format(tempJoindate);
+		
+		
 		String mOutdate = "";
 		if (!mOutdateStr.equals("")){
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
 			Date tempOutdate = null;
 			try {
 				tempOutdate = sdf.parse(mOutdateStr);
@@ -177,7 +195,7 @@ public class MemberController {
 		vo.setmId(mId);
 		vo.setmName(mName);
 		vo.setmBirth(mBirth);
-		vo.setmJoinDate(mJoinDate);
+		vo.setmJoinDate(mJoindate);
 		vo.setmAddr(mAddr);
 		vo.setmPhone(mPhone);
 		vo.setmMail(mMail);

@@ -1,5 +1,8 @@
 <%@page import="net.gentledot.rental.vo.MemberVO"%>
 <%@ page import="net.gentledot.utils.Tools" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.text.ParseException" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 		 pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -9,6 +12,20 @@
 	MemberVO oneOfMember = (MemberVO) request.getAttribute("oneOfMember");
 
     String memberStatus = Tools.customToEmptyBlank(oneOfMember.getmStatus(), "").equals("M") ? "회원" : "탈퇴";
+
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
+	Date tempBirth= null;
+	Date tempJoindate= null;
+	try {
+		tempBirth = sdf2.parse(oneOfMember.getmBirth());
+		tempJoindate = sdf2.parse(oneOfMember.getmJoinDate());
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	String mBirth = sdf.format(tempBirth);
+	String mJoindate = sdf.format(tempJoindate);
 
 %>
 <head>
@@ -39,11 +56,11 @@
 					</li>
 					<li class="list-group-item form-group">
 						<label for="getMBirth">회원 생일 : </label>
-						<input type="text" id="getMBirth" name="getMBirth" class="form-control" value="<%= Tools.customToEmptyBlank(oneOfMember.getmBirth(), "99999999")%>" readonly/>
+						<input type="text" id="getMBirth" name="getMBirth" class="form-control" value="<%= Tools.customToEmptyBlank(mBirth, "9999-99-99")%>" readonly/>
 					</li>
 					<li class="list-group-item form-group">
 						<label for="getMJoinDate">회원가입일 : </label>
-						<input type="text" id="getMJoinDate" name="getMJoinDate" class="form-control" value="<%= Tools.customToEmptyBlank(oneOfMember.getmJoinDate(), "99999999") %>" readonly />
+						<input type="text" id="getMJoinDate" name="getMJoinDate" class="form-control" value="<%= Tools.customToEmptyBlank(mJoindate, "9999-99-99") %>" readonly />
 					</li>
 					<li class="list-group-item form-group">
 						<label for="getMAddr">주소 : </label>
@@ -51,7 +68,7 @@
 					</li>
 					<li class="list-group-item form-group">
 						<label for="getMPhone">전화번호 : </label>
-						<input type="number" id="getMPhone" name="getMPhone" class="form-control" min="0" value="<%= Tools.customToEmptyBlank(oneOfMember.getmPhone(), "") %>" readonly />
+						<input type="text" id="getMPhone" name="getMPhone" class="form-control" min="0" value="<%= Tools.customToEmptyBlank(oneOfMember.getmPhone(), "") %>" readonly />
 					</li>
 					<li class="list-group-item form-group">
 						<label for="getMMail">이메일 : </label>
@@ -85,4 +102,22 @@
 </body>
 <script src="<%=contextPath%>/webjars/jquery/3.2.1/jquery.min.js"></script>
 <script src="<%=contextPath%>/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+<script>
+	$(function(){
+	    convertPhoneNum();
+
+		function convertPhoneNum() {
+            var phoneNum = $('#getMPhone').val();
+            var convertedTel = "";
+            if (phoneNum.length === 11){
+                convertedTel = phoneNum.substr(0, 3) + "-" + phoneNum.substr(3, 4) + "-" + phoneNum.substr(7, 4);
+            }else if (phoneNum.length === 10){
+convertedTel = phoneNum.substr(0, 3) + "-" + phoneNum.substr(3, 3) + "-" + phoneNum.substr(6, 4);
+            }
+
+            $('#getMPhone').val(convertedTel);
+        }
+
+	});
+</script>
 </html>
