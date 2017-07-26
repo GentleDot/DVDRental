@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PRODUCT">
+
+    	<resultMap id="productMap" type="productVO">
+    	    <result property="pId" 			column="P_ID" />
+    	    <result property="pName" 		column="P_NAME" />
+    	    <result property="pPrice" 		column="P_PRICE" />
+    	    <result property="pGrade" 		column="P_GRADE" />
+    	</resultMap>                               
+
+    	<sql id="productSql">
+			SELECT
+				P_ID
+				, P_NAME
+				, P_PRICE
+				, P_GRADE
+			FROM
+				PRODUCT
+		</sql>
+		
+		<select id="selectProductList" parameterType="productVO" resultMap="productMap">
+			SELECT *
+				FROM (
+					SELECT ROWNUM rn, a.*
+						FROM (
+							<include refid="productSql" />
+							WHERE P_ID LIKE '%'||#{pId}||'%'
+						) a
+				)
+			WHERE
+				ROWNUM <![CDATA[<=]]> #{pageSize}
+					AND rn <![CDATA[>]]> (#{pageNo} - 1) * #{pageSize}
+					
+    	</select>
+    	
+    	<select id="selectProductListByName" parameterType="productVO" resultMap="productMap">
+			SELECT *
+				FROM (
+					SELECT ROWNUM rn, a.*
+						FROM (
+							<include refid="productSql" />
+							WHERE P_NAME LIKE '%'||#{pName}||'%'
+						) a
+				)
+			WHERE
+				ROWNUM <![CDATA[<=]]> #{pageSize}
+					AND rn <![CDATA[>]]> (#{pageNo} - 1) * #{pageSize}
+					
+    	</select>
+    	
+    	<select id="totalCountOfProductList" resultType="Integer">
+  			SELECT COUNT(0) TOTALCNT
+  				FROM(
+  					<include refid="productSql" />
+  				)  	
+    	</select>
+    	
+    	<select id="selectOneOfProduct" parameterType="productVO" resultMap="productMap">
+    		<include refid="productSql" />
+    		WHERE
+    			P_ID = #{pId}
+    	</select>
+    	
+    	<insert id="addProduct" parameterType="productVO">
+    		INSERT INTO PRODUCT(P_ID, P_NAME, P_PRICE, P_GRADE)
+    			VALUES (
+    				#{pId, jdbcType=VARCHAR}
+    				, #{pName, jdbcType=VARCHAR}
+    				, #{pPrice, jdbcType=INTEGER}
+    				, #{pGrade, jdbcType=INTEGER}
+    			)
+    	</insert>
+    	
+    	<update id="updateProduct" parameterType="productVO">
+    		UPDATE PRODUCT
+			  SET
+			    P_NAME = #{pName, jdbcType=VARCHAR}
+			    , P_PRICE = #{pPrice, jdbcType=INTEGER}
+			    , P_GRADE = #{pGrade, jdbcType=INTEGER}
+			  WHERE
+			    P_ID = #{pId, jdbcType=VARCHAR}
+    	</update>
+    	
+    	<delete id="delProduct" parameterType="productVO">
+    		DELETE PRODUCT WHERE P_ID = #{pId, jdbcType=VARCHAR}
+    	</delete>
+    	
+</mapper>
