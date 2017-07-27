@@ -10,5 +10,6 @@
 		<typeAlias alias="tempVO" type="net.gentledot.rental.vo.TempVO"/>
 		<typeAlias alias="memberVO" type="net.gentledot.rental.vo.MemberVO"/>
 		<typeAlias alias="productVO" type="net.gentledot.rental.vo.ProductVO"/>
+		<typeAlias alias="storageVO" type="net.gentledot.rental.vo.StorageVO"/>
     </typeAliases>
 </configuration>
