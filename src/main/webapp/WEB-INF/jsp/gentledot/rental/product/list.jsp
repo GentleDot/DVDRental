@@ -1,14 +1,13 @@
-<%@page import="net.gentledot.rental.vo.MemberVO"%>
+<%@ page import="net.gentledot.rental.vo.ProductVO" %>
 <%@ page import="java.util.List" %>
-<%@ page import="org.springframework.web.servlet.support.RequestContextUtils" %>
 <%@ page import="net.gentledot.utils.Tools" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+		 pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko-KR">
 <%
 	String contextPath = request.getContextPath();
-	List<MemberVO> resultList = (List<MemberVO>) request.getAttribute("resultList");
+	List<ProductVO> resultList = (List<ProductVO>) request.getAttribute("resultList");
 	String keyword = (String) request.getAttribute("keyword");
 	String category = (String) request.getAttribute("category");
 	int pageNo = (Integer) request.getAttribute("pageNo");
@@ -16,7 +15,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="<%=contextPath%>/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css">
-<title>회원 목록 조회</title>
+<title>제품 목록 조회</title>
 	<style>
 		.row{
 			margin-bottom: 1em;
@@ -29,15 +28,17 @@
 	<section class="main">
 		<section class="row">
 			<div class="col-md-12">
-				<h2>회원 목록</h2>
-				<form action="<%= contextPath %>/member/memberList.do" method="post" class="form-inline" name="sendSearchKeyword">
+				<h2>제품 목록</h2>
+				<form action="<%= contextPath %>/product/productList.do" method="post" class="form-inline text-center" name="sendSearchKeyword">
 					<fieldset class="form-group">
-						<legend>회원 검색</legend>
+						<legend class="sr-only">제품 검색</legend>
 						<div class="form-group">
+							<label for="category" class="sr-only">검색 설정 (ID / 제품명)</label>
 							<select name="category" id="category" class="form-control">
-								<option value="id" selected>회원 ID</option>
-								<option value="name">회원 이름</option>
+								<option value="id" selected>제품 ID</option>
+								<option value="name">제품 이름</option>
 							</select>
+							<label for="keyword" class="sr-only">검색 키워드 입력</label>
 							<input type="text" id="keyword" class="form-control" name="keyword" value="<%= keyword %>"/>
 						</div>
 						<div class="form-group">
@@ -49,41 +50,55 @@
 			</div>
 		</section>
 		<section class="row">
-			<div class="col-md-12">
+			<div class="col-md-8 col-md-offset-2">
 				<div class="text-right">
-					<a href="<%= contextPath %>/member/addMemberView.do" class="btn btn-success">회원 추가</a>
+					<a href="<%= contextPath %>/product/addProductView.do" class="btn btn-success">제품 추가</a>
 				</div>
 				<table class="table table-bordered">
-					<caption class="sr-only">DVD 대여점 회원 목록</caption>
+					<caption class="sr-only">DVD 대여점 제품 목록</caption>
 					<thead>
 					<tr>
 						<th>ID</th>
-						<th>이름</th>
-						<th>생년월일</th>
-						<th>가입일</th>
-						<th>연락처</th>
-						<th>대여 가능 개수</th>
+						<th>제품명</th>
+						<th>제품가격</th>
+						<th>등급</th>
 					</tr>
 					</thead>
 					<tfoot>
 
 					</tfoot>
 					<tbody>
-					<% for(MemberVO member : resultList){ %>
+					<%
+						for(ProductVO product : resultList){
+						    String productGrade = "";
+							switch (Tools.customToEmptyBlank(product.getpGrade(), "all")){
+								case "ALL":
+									productGrade = "전체 관람가";
+									break;
+								case "7":
+									productGrade = "7세 관람가";
+									break;
+								case "12":
+								    productGrade = "12세 관람가";
+								    break;
+								case "15":
+								    productGrade = "15세 관람가";
+								    break;
+								default:
+								    productGrade = "청소년 관람불가";
+								    break;
+							}
+					%>
 						<tr>
 							<td>
-								<a href="<%= contextPath %>/member/memberInfo.do?mId=<%=Tools.customToEmptyBlank(member.getmId(), "")%>"><%=Tools.customToEmptyBlank(member.getmId(), "")%></a>
+								<a href="<%= contextPath %>/product/productModifyView.do?pId=<%=Tools.customToEmptyBlank(product.getpId(), "")%>"><%=Tools.customToEmptyBlank(product.getpId(), "")%></a>
 							</td>
 							<td>
-								<a href="<%= contextPath %>/member/memberInfo.do?mId=<%=Tools.customToEmptyBlank(member.getmId(), "")%>"><%=Tools.customToEmptyBlank(member.getmName(), "")%></a>
+								<a href="<%= contextPath %>/product/productModifyView.do?pId=<%=Tools.customToEmptyBlank(product.getpId(), "")%>"><%=Tools.customToEmptyBlank(product.getpName(), "")%></a>
 							</td>
-							<td><%=Tools.customToEmptyBlank(member.getmBirth(), "")%>
+							<td><%=Tools.customToEmptyBlank(product.getpPrice(), "0")%>
 							</td>
-							<td><%=Tools.customToEmptyBlank(member.getmJoinDate(), "")%>
-							</td>
-							<td><%=Tools.customToEmptyBlank(member.getmPhone(), "")%>
-							</td>
-							<td><%=Tools.customToEmptyBlank(member.getmLimit(), "0")%>
+							<td><%= productGrade %>
 							</td>
 						</tr>
 					<% }%>
@@ -119,7 +134,7 @@
 <script>
     $("input:submit").click(pageNoInitializer);
     searchCatReminder();
-    
+
     function goPage(pageNo){
         document.sendSearchKeyword.pageNo.value = pageNo;
         document.sendSearchKeyword.submit();

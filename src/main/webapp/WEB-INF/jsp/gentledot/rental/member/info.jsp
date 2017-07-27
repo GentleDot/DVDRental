@@ -117,7 +117,6 @@ convertedTel = phoneNum.substr(0, 3) + "-" + phoneNum.substr(3, 3) + "-" + phone
 
             $('#getMPhone').val(convertedTel);
         }
-
 	});
 </script>
 </html>

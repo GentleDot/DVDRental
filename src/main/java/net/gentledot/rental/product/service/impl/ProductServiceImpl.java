@@ -85,6 +85,10 @@ public class ProductServiceImpl implements ProductService {
         return dao.addProduct(vo);
     }
 
+    public ProductVO selectOneOfProduct(ProductVO vo){
+        return dao.selectOneOfProduct(vo);
+    }
+
     public int updateProduct(ProductVO vo){
         return dao.updateProduct(vo);
     }
