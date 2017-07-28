@@ -32,6 +32,8 @@
 					SELECT ROWNUM rn, a.*
 						FROM (
 							<include refid="storageSql" />
+
+
 							WHERE ST_ID LIKE '%'||#{stId}||'%'
 							ORDER BY ST_GETDATE ASC
 						) a
