@@ -56,15 +56,12 @@
     	</select>
     	
     	<insert id="addStorage" parameterType="storageVO">
-    		INSERT INTO STORAGE(ST_ID ,ST_GETDATE ,P_ID ,ST_STATUS ,ST_WASTEDATE ,ST_WASTECOST ,ST_WASTE_REASON)
+    		INSERT INTO STORAGE(ST_ID ,ST_GETDATE ,P_ID ,ST_STATUS)
     			VALUES (
     				#{stId, jdbcType=VARCHAR}
     				, #{stGetdate, jdbcType=VARCHAR}
     				, #{pId, jdbcType=VARCHAR}
     				, #{stStatus, jdbcType=VARCHAR}
-    				, #{stWastedate, jdbcType=VARCHAR}
-    				, #{stWastecost, jdbcType=INTEGER}
-    				, #{stWasteReason, jdbcType=INTEGER}
     			)
     	</insert>
     	
