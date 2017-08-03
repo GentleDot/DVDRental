@@ -48,7 +48,12 @@
 					AND rn <![CDATA[>]]> (#{pageNo} - 1) * #{pageSize}
 					
     	</select>
-    	
+
+    	<select id="selectTotalProductList" resultMap="productMap">
+			<include refid="productSql"/>
+			ORDER BY P_ID
+		</select>
+
     	<select id="totalCountOfProductList" resultType="Integer">
   			SELECT COUNT(0) TOTALCNT
   				FROM(

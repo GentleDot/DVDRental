@@ -74,6 +74,11 @@ public class ProductServiceImpl implements ProductService {
         return resultMap;
     }
 
+    @Override
+    public List<ProductVO> selectTotalProductList() {
+        return dao.selectTotalProductList();
+    }
+
     public int addProduct(ProductVO vo){
 
 		/*id를 idsService에서 받아온 뒤 그 번호를 양식에 맞게 변형하여 VO로 전달*/

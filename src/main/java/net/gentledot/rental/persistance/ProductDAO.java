@@ -19,6 +19,10 @@ public class ProductDAO extends EgovAbstractMapper {
         return selectList("selectProductListByName", vo);
     }
 
+    public List<ProductVO> selectTotalProductList(){
+        return selectList("selectTotalProductList");
+    }
+
     public int totalCountOfProductList(){
         return selectOne("totalCountOfProductList");
     }

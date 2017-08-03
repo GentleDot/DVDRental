@@ -3,8 +3,9 @@ package net.gentledot.rental.storage.web;
 
 import net.gentledot.ids.service.IdsService;
 import net.gentledot.rental.product.service.ProductService;
-import net.gentledot.rental.product.web.ProductController;
+import net.gentledot.rental.storage.service.StorageService;
 import net.gentledot.rental.vo.ProductVO;
+import net.gentledot.rental.vo.StorageVO;
 import net.gentledot.utils.Pagination;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,14 +35,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional(value="txManager")
 public class StorageControllerTest {
 
-	private ProductVO vo;
+	private StorageVO vo;
 	private MockMvc mockMvc;
 
 	@InjectMocks
-	ProductController controller;
+	StorageController controller;
 	
 	@Mock
-	ProductService service;
+	StorageService service;
+
+	@Mock
+	ProductService productService;
 	
 	@Mock
 	IdsService idsService;
@@ -55,149 +59,154 @@ public class StorageControllerTest {
 		/*mockMvc = MockMvcBuilders.webAppContextSetup(context).dispatchOptions(true).build();*/
 		
 		mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-		vo = new ProductVO();
+		vo = new StorageVO();
 	}
 	
 	@Test
-	public void selectProductList() throws Exception{
+	public void selectStorageList() throws Exception{
 		/* view에서 받아올 객체 설정 */
-		String category = "id";
-		String keyword = "1";
+		String stId = "";
 		int pageNo = 1;
 		// 아래 2개 변수는 상수 처리
 		int pageSize = 10;
 		int pageScope = 5;
 
-		/* 받아온 category에 따라 받아올 리스트를 다르게 설정 */
-		List<ProductVO> returnList = null;
-		switch (category){
-			case "id":
-				List<ProductVO> getProductList = new ArrayList<>();
-				returnList = getProductList;
-				break;
-			case "name":
-				List<ProductVO> getProductListByName = new ArrayList<>();
-				returnList = getProductListByName;
-				break;
-		}
+		/*리스트 생성*/
+		List<StorageVO> returnList = new ArrayList<>();
 
 		/* pagination */
 		int totalCount = 10;
 		Pagination pag = new Pagination(pageSize, pageNo, pageScope, totalCount);
+		pag.setPaging();
 
 		/* 서비스에서 받아올 returnMap */
 		Map<String, Object> returnMap = new HashMap<>();
 		returnMap.put("resultList", returnList);
 		returnMap.put("pagination", pag);
-		
-		when(service.getProductList(anyString(), anyInt(), anyInt(), anyInt())).thenReturn(returnMap);
 
-		Map<String, Object> resultMap = service.getProductList(keyword, pageSize, pageNo, pageScope);
+		when(service.getStorageList(anyString(), anyInt(), anyInt(), anyInt())).thenReturn(returnMap);
+
+		Map<String, Object> resultMap = service.getStorageList(stId, pageSize, pageNo, pageScope);
 		
-		mockMvc.perform(get("/product/productList.do"))
+		mockMvc.perform(get("/storage/storageList.do"))
 					.andExpect(status().isOk())
 					.andExpect(model().attributeExists("resultList"))
 					.andExpect(model().attributeExists("pagination"))
-					.andExpect(model().attributeExists("keyword"))
-					.andExpect(model().attributeExists("category"))
+					.andExpect(model().attributeExists("stId"))
 					.andExpect(model().attributeExists("pageNo"));
 		
 	}
+
+	@Test
+	public void addStorageViewTest() throws Exception{
+		List<ProductVO> returnList = new ArrayList<>();
+
+		when(productService.selectTotalProductList()).thenReturn(returnList);
+
+		List<ProductVO> productList = productService.selectTotalProductList();
+
+		mockMvc.perform(get("/storage/addStorageView.do"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("productList"));
+	}
 	
 	@Test
-	public void addProductInList() throws Exception{
-		String pName= "";
-		String pPrice = "";
-		String pGrade = "";
-		
-		ProductVO insertVO = new ProductVO();
-		insertVO.setpId("1");
-		insertVO.setpName(pName);
-		insertVO.setpPrice(pPrice);
-		insertVO.setpGrade(pGrade);
+	public void addStorageInListTest() throws Exception{
+		String stGetdate = "";
+		String pId = "";
 
-		when(service.addProduct((ProductVO) anyObject())).thenReturn(1);
-
-		int resultStatus = service.addProduct(insertVO);
-		
-		mockMvc.perform(get("/product/addProduct.do"))
-					.andExpect(status().is3xxRedirection())
-					.andExpect(redirectedUrl("/product/productList.do"));
-		
-	}
-
-	/*@Test
-	public void selectOneOfProductTest() throws Exception{
-		String pId = "1";
-
-		when(service.selectOneOfProduct((ProductVO) anyObject())).thenReturn(new ProductVO());
-
-		vo.setpId(pId);
-		ProductVO resultVO = service.selectOneOfProduct(vo);
-		
-		mockMvc.perform(get("/product/productInfo.do")
-							.param("pId", "1"))
-					.andExpect(status().isOk())
-					.andExpect(model().attributeExists("oneOfProduct"));
-		
-	}*/
-
-
-	@Test
-	public void updateProductInfoViewTest() throws Exception{
-		String pId = "1";
-
-		when(service.selectOneOfProduct((ProductVO) anyObject())).thenReturn(new ProductVO());
-
-		vo.setpId(pId);
-		ProductVO selectVO = service.selectOneOfProduct(vo);
-		
-		mockMvc.perform(get("/product/productModifyView.do")
-				.param("pId", "1"))
-		.andExpect(status().isOk())
-		.andExpect(model().attributeExists("oneOfProduct"));
-		
-	}
-
-	@Test
-	public void updateProductInfoTest() throws Exception{
-		String pId = "1";
-		String pName = "";
-		String pPrice = "0";
-		String pGrade = "ALL";
-
-		ProductVO insertVO = new ProductVO();
+		StorageVO insertVO = new StorageVO();
+		insertVO.setStGetdate(stGetdate);
 		insertVO.setpId(pId);
-		insertVO.setpName(pName);
-		insertVO.setpPrice(pPrice);
-		insertVO.setpGrade(pGrade);
-		
-		when(service.updateProduct((ProductVO) anyObject())).thenReturn(1);
-		int resultStatus = service.updateProduct(insertVO);
-		
-		mockMvc.perform(get("/product/productModify.do"))
+
+		when(service.addStorage((StorageVO) anyObject())).thenReturn(1);
+
+		int resultStatus = service.addStorage(insertVO);
+
+		mockMvc.perform(get("/storage/addStorage.do"))
 					.andExpect(status().is3xxRedirection())
-					.andExpect(redirectedUrl("/product/productList.do"));
+					.andExpect(redirectedUrl("/storage/storageList.do"));
+
+	}
+
+	@Test
+	public void selectOneOfStorageTest() throws Exception{
+		String stId = "2017-item1";
+
+		when(service.getOneOfStorage((StorageVO) anyObject())).thenReturn(new StorageVO());
+
+		vo.setStId(stId);
+		StorageVO resultVO = service.getOneOfStorage(vo);
+		
+		mockMvc.perform(get("/storage/storageInfo.do")
+							.param("stId", stId))
+					.andExpect(status().isOk())
+					.andExpect(model().attributeExists("oneOfStorage"));
 		
 	}
 
 	@Test
-	public void delProductTest() throws Exception {
+	public void updateStorageInfoViewTest() throws Exception{
+		String stId = "2017-item1";
+
+		when(service.getOneOfStorage((StorageVO) anyObject())).thenReturn(new StorageVO());
+
+		vo.setStId(stId);
+		StorageVO selectedStorage = service.getOneOfStorage(vo);
+		
+		mockMvc.perform(get("/storage/storageModifyView.do")
+				.param("stId", stId))
+		.andExpect(status().isOk())
+		.andExpect(model().attributeExists("oneOfStorage"));
+		
+	}
+
+	@Test
+	public void updateStorageInfoTest() throws Exception{
+		String stId = "2017-item1";
+		String stGetdate = "";
+		String pId = "";
+		String stStatus = "";
+		String stWastedate = "";
+		String stWastecost = "0";
+		String stWasteReason = "사유";
+
+		StorageVO updateVO = new StorageVO();
+		updateVO.setStId(stId);
+		updateVO.setStGetdate(stGetdate);
+		updateVO.setpId(pId);
+		updateVO.setStStatus(stStatus);
+		updateVO.setStWastedate(stWastedate);
+		updateVO.setStWastecost(stWastecost);
+		updateVO.setStWasteReason(stWasteReason);
+
+		when(service.updateStorage((StorageVO) anyObject())).thenReturn(1);
+		int resultStatus = service.updateStorage(updateVO);
+		
+		mockMvc.perform(get("/storage/storageModify.do"))
+					.andExpect(status().is3xxRedirection())
+					.andExpect(redirectedUrl("/storage/storageList.do"));
+		
+	}
+
+	/*
+	@Test
+	public void delStorageTest() throws Exception {
 		String pId = "1";
 
-		when(service.delProduct((ProductVO) anyObject())).thenReturn(1);
+		when(service.delStorage((StorageVO) anyObject())).thenReturn(1);
 
 		vo.setpId(pId);
-		int resultStatus = service.delProduct(vo);
+		int resultStatus = service.delStorage(vo);
 
-		mockMvc.perform(get("/product/productDel.do")
+		mockMvc.perform(get("/storage/storageDel.do")
 			.param("pId", "1"))
 				.andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/product/productList.do"));
+				.andExpect(redirectedUrl("/storage/storageList.do"));
 
 
 	}
 
-	
+	*/
 
 }

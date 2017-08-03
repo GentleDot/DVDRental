@@ -1,5 +1,7 @@
 package net.gentledot.rental.storage.service;
 
+import net.gentledot.rental.vo.StorageVO;
+
 import java.util.Map;
 
 /**
@@ -7,4 +9,7 @@ import java.util.Map;
  */
 public interface StorageService {
     public Map<String, Object> getStorageList(String stId, int pageSize, int pageNo, int pageScope);
+    public StorageVO getOneOfStorage(StorageVO vo);
+    public int addStorage(StorageVO vo);
+    public int updateStorage(StorageVO vo);
 }

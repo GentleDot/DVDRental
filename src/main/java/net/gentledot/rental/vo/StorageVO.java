@@ -10,6 +10,8 @@ public class StorageVO extends PaginationVO {
 	private String	stWastecost;
 	private String	stWasteReason;
 
+	private String pName;
+
 	public String getStId() {
 		return stId;
 	}
@@ -64,6 +66,14 @@ public class StorageVO extends PaginationVO {
 
 	public void setStWasteReason(String stWasteReason) {
 		this.stWasteReason = stWasteReason;
+	}
+
+	public String getpName() {
+		return pName;
+	}
+
+	public void setpName(String pName) {
+		this.pName = pName;
 	}
 }
                                  
