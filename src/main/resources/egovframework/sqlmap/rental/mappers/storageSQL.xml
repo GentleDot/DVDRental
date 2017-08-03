@@ -2,89 +2,89 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="STORAGE">
 
-    	<resultMap id="storageMap" type="storageVO">
-    	    <result property="stId" 			column="ST_ID" />
-    	    <result property="stGetdate" 		column="ST_GETDATE" />
-    	    <result property="pId" 				column="P_ID" />
-    	    <result property="stStatus" 		column="ST_STATUS" />
-    	    <result property="stWastedate" 		column="ST_WASTEDATE" />
-			<result property="stWastecost" 		column="ST_WASTECOST" />
-			<result property="stWasteReason" 	column="ST_WASTE_REASON" />
-			<result property="pName" 			column="P_NAME" />
+	<resultMap id="storageMap" type="storageVO">
+		<result property="stId" 			column="ST_ID" />
+		<result property="stGetdate" 		column="ST_GETDATE" />
+		<result property="pId" 				column="P_ID" />
+		<result property="stStatus" 		column="ST_STATUS" />
+		<result property="stWastedate" 		column="ST_WASTEDATE" />
+		<result property="stWastecost" 		column="ST_WASTECOST" />
+		<result property="stWasteReason" 	column="ST_WASTE_REASON" />
+		<result property="pName" 			column="P_NAME" />
 
-    	</resultMap>
+	</resultMap>
 
-    	<sql id="storageSql">
-			SELECT
-				ST_ID
-				,ST_GETDATE
-				,P_ID
-				,ST_STATUS
-				,ST_WASTEDATE
-				,ST_WASTECOST
-				,ST_WASTE_REASON
-			FROM
-				STORAGE
-		</sql>
-		
-		<select id="selectStorageList" parameterType="storageVO" resultMap="storageMap">
-			SELECT *
-				FROM (
-					SELECT ROWNUM rn, a.*
-						FROM (
-							SELECT
-								s.ST_ID, s.ST_GETDATE, s.P_ID, p.P_NAME, s.ST_STATUS, s.ST_WASTEDATE, s.ST_WASTECOST, s.ST_WASTE_REASON
-							FROM
-								STORAGE s, PRODUCT p
-							WHERE ST_ID LIKE '%'||#{stId}||'%' and s.P_ID = p.P_ID
-							ORDER BY ST_GETDATE ASC
-						) a
-				)
-			WHERE
-				ROWNUM <![CDATA[<=]]> #{pageSize}
-					AND rn <![CDATA[>]]> (#{pageNo} - 1) * #{pageSize}
-					
-    	</select>
-    	
-    	<select id="totalCountOfStorageList" resultType="Integer">
-  			SELECT COUNT(0) TOTALCNT
-  				FROM(
-  					<include refid="storageSql" />
-  				)  	
-    	</select>
-    	
-    	<select id="selectOneOfStorage" parameterType="storageVO" resultMap="storageMap">
-    		SELECT
-				s.ST_ID, s.ST_GETDATE, s.P_ID, p.P_NAME, s.ST_STATUS, s.ST_WASTEDATE, s.ST_WASTECOST, s.ST_WASTE_REASON
-			FROM
-				STORAGE s, PRODUCT p
-    		WHERE
-				ST_ID = #{stId} and s.P_ID = p.P_ID
-    	</select>
-    	
-    	<insert id="addStorage" parameterType="storageVO">
-    		INSERT INTO STORAGE(ST_ID ,ST_GETDATE ,P_ID ,ST_STATUS)
-    			VALUES (
-    				#{stId, jdbcType=VARCHAR}
-    				, #{stGetdate, jdbcType=VARCHAR}
-    				, #{pId, jdbcType=VARCHAR}
-    				, #{stStatus, jdbcType=VARCHAR}
-    			)
-    	</insert>
-    	
-    	<update id="updateStorage" parameterType="storageVO">
-    		UPDATE STORAGE
-			  SET
-				ST_STATUS = #{stStatus, jdbcType=VARCHAR}
-				, ST_WASTEDATE = #{stWastedate, jdbcType=VARCHAR}
-				, ST_WASTECOST = #{stWastecost, jdbcType=INTEGER}
-				, ST_WASTE_REASON =#{stWasteReason, jdbcType=INTEGER}
-			  WHERE
-			    ST_ID = #{stId, jdbcType=VARCHAR}
-    	</update>
-    	
-    	<delete id="delStorage" parameterType="storageVO">
-    		DELETE STORAGE WHERE ST_ID = #{stId, jdbcType=VARCHAR}
-    	</delete>
-    	
+	<sql id="storageSql">
+		SELECT
+		ST_ID
+		,ST_GETDATE
+		,P_ID
+		,ST_STATUS
+		,ST_WASTEDATE
+		,ST_WASTECOST
+		,ST_WASTE_REASON
+		FROM
+		STORAGE
+	</sql>
+
+	<select id="selectStorageList" parameterType="storageVO" resultMap="storageMap">
+		SELECT *
+		FROM (
+		SELECT ROWNUM rn, a.*
+		FROM (
+		SELECT
+		s.ST_ID, s.ST_GETDATE, s.P_ID, p.P_NAME, s.ST_STATUS, s.ST_WASTEDATE, s.ST_WASTECOST, s.ST_WASTE_REASON
+		FROM
+		STORAGE s, PRODUCT p
+		WHERE ST_ID LIKE '%'||#{stId}||'%' and s.P_ID = p.P_ID
+		ORDER BY ST_GETDATE ASC
+		) a
+		)
+		WHERE
+		ROWNUM <![CDATA[<=]]> #{pageSize}
+		AND rn <![CDATA[>]]> (#{pageNo} - 1) * #{pageSize}
+
+	</select>
+
+	<select id="totalCountOfStorageList" resultType="Integer">
+		SELECT COUNT(0) TOTALCNT
+		FROM(
+		<include refid="storageSql" />
+		)
+	</select>
+
+	<select id="selectOneOfStorage" parameterType="storageVO" resultMap="storageMap">
+		SELECT
+		s.ST_ID, s.ST_GETDATE, s.P_ID, p.P_NAME, s.ST_STATUS, s.ST_WASTEDATE, s.ST_WASTECOST, s.ST_WASTE_REASON
+		FROM
+		STORAGE s, PRODUCT p
+		WHERE
+		ST_ID = #{stId} and s.P_ID = p.P_ID
+	</select>
+
+	<insert id="addStorage" parameterType="storageVO">
+		INSERT INTO STORAGE(ST_ID ,ST_GETDATE ,P_ID ,ST_STATUS)
+		VALUES (
+		#{stId, jdbcType=VARCHAR}
+		, #{stGetdate, jdbcType=VARCHAR}
+		, #{pId, jdbcType=VARCHAR}
+		, #{stStatus, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateStorage" parameterType="storageVO">
+		UPDATE STORAGE
+		SET
+		ST_STATUS = #{stStatus, jdbcType=VARCHAR}
+		, ST_WASTEDATE = #{stWastedate, jdbcType=VARCHAR}
+		, ST_WASTECOST = #{stWastecost, jdbcType=INTEGER}
+		, ST_WASTE_REASON =#{stWasteReason, jdbcType=INTEGER}
+		WHERE
+		ST_ID = #{stId, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="delStorage" parameterType="storageVO">
+		DELETE STORAGE WHERE ST_ID = #{stId, jdbcType=VARCHAR}
+	</delete>
+
 </mapper>

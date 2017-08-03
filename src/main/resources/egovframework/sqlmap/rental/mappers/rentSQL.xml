@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="STORAGE">
+
+	<resultMap id="rentMap" type="rentVO">
+		<result property="mId"          		column="M_ID" />
+		<result property="rRentdate"    		column="R_RENTDATE" />
+		<result property="stId"         		column="ST_ID" />
+		<result property="rRentperiod"  		column="R_RENTPERIOD" />
+		<result property="rCharge"		  		column="R_CHARGE" />
+		<result property="rReturndate"  		column="R_RETURNDATE" />
+		<result property="rReturnStatus"		column="R_RETURNSTATUS" />
+		<result property="rArrears"     		column="R_ARREARS" />
+		<result property="rArrearsClear"		column="R_ARREARS_CLEAR" />
+		<result property="pName"				column="R_ARREARS_CLEAR" />
+	</resultMap>
+
+	<sql id="rentSql">
+		SELECT
+		M_ID
+		, R_RENTDATE
+		, ST_ID
+		, R_RENTPERIOD
+		, R_CHARGE
+		, R_RETURNDATE
+		, R_RETURNSTATUS
+		, R_ARREARS
+		, R_ARREARS_CLEAR
+		FROM
+		RENT
+	</sql>
+
+	<select id="selectRentListByMemberID" parameterType="rentVO" resultMap="rentMap">
+		SELECT *
+		FROM (
+		SELECT ROWNUM rn, a.*
+		FROM (
+		SELECT
+		r.M_ID, r.R_RENTDATE, r.ST_ID, r.R_RENTPERIOD, r.R_CHARGE, r.R_RETURNDATE, r.R_RETURNSTATUS, r.R_ARREARS, r.R_ARREARS_CLEAR, p.P_NAME
+		FROM
+		RENT r, STORAGE s, PRODUCT p
+		WHERE r.M_ID LIKE '%'||#{mId}||'%' and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID
+		ORDER BY r.R_RENTDATE ASC
+		) a
+		)
+		WHERE
+		ROWNUM <![CDATA[<=]]> #{pageSize}
+		AND rn <![CDATA[>]]> (#{pageNo} - 1) * #{pageSize}
+
+	</select>
+	<select id="selectRentListByRentdate" parameterType="rentVO" resultMap="rentMap">
+		SELECT *
+		FROM (
+		SELECT ROWNUM rn, a.*
+		FROM (
+		SELECT
+		r.M_ID, r.R_RENTDATE, r.ST_ID, r.R_RENTPERIOD, r.R_CHARGE, r.R_RETURNDATE, r.R_RETURNSTATUS, r.R_ARREARS, r.R_ARREARS_CLEAR, p.P_NAME
+		FROM
+		RENT r, STORAGE s, PRODUCT p
+		WHERE r.R_RENTDATE LIKE '%'||#{rRentdate}||'%' and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID
+		ORDER BY r.R_RENTDATE ASC
+		) a
+		)
+		WHERE
+		ROWNUM <![CDATA[<=]]> #{pageSize}
+		AND rn <![CDATA[>]]> (#{pageNo} - 1) * #{pageSize}
+
+	</select>
+
+
+	<select id="totalCountOfRentList" resultType="Integer">
+		SELECT COUNT(0) TOTALCNT
+		FROM(
+		<include refid="rentSql" />
+		)
+	</select>
+
+	<select id="selectOneOfRent" parameterType="rentVO" resultMap="rentMap">
+		SELECT
+		r.M_ID, r.R_RENTDATE, r.ST_ID, r.R_RENTPERIOD, r.R_CHARGE, r.R_RETURNDATE, r.R_RETURNSTATUS, r.R_ARREARS, r.R_ARREARS_CLEAR, p.P_NAME
+		FROM
+		RENT r, STORAGE s, PRODUCT p
+		WHERE
+		M_ID = #{mId} and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID
+	</select>
+
+	<insert id="addRent" parameterType="rentVO">
+		INSERT INTO RENT(
+		M_ID
+		, R_RENTDATE
+		, ST_ID
+		, R_RENTPERIOD
+		, R_CHARGE
+		)
+		VALUES (
+		#{mId, jdbcType=VARCHAR}
+		, #{rRentdate, jdbcType=VARCHAR}
+		, #{rRentperiod, jdbcType=INTEGER}
+		, #{rCharge, jdbcType=INTEGER}
+		)
+	</insert>
+
+	<update id="updateRent" parameterType="rentVO">
+		UPDATE RENT
+		SET
+		R_RETURNDATE = #{rReturndate, jdbcType=VARCHAR}
+		, R_RETURNSTATUS = #{rReturnStatus, jdbcType=VARCHAR}
+		, R_ARREARS = #{rArrears, jdbcType=INTEGER}
+		, R_ARREARS_CLEAR = #{rArrearsClear, jdbcType=VARCHAR}
+		WHERE
+		M_ID = #{mId, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="delRent" parameterType="rentVO">
+    		DELETE RENT WHERE M_ID = #{mId, jdbcType=VARCHAR}
+    	</delete>
+
+</mapper>
