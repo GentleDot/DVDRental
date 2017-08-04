@@ -140,7 +140,7 @@
 	</update>
 
 	<delete id="delRent" parameterType="rentVO">
-		DELETE RENT WHERE M_ID = #{mId, jdbcType=VARCHAR}
+		DELETE RENT WHERE M_ID = #{mId, jdbcType=VARCHAR} and R_RENTDATE = #{rRentdate, jdbcType=VARCHAR} and ST_ID = #{stId, jdbcType=VARCHAR}
 	</delete>
 
 </mapper>

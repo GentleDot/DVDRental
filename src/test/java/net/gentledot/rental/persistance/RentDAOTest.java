@@ -265,13 +265,11 @@ public class RentDAOTest {
 
 		dao.addRent(tempVO);
 
-		vo.setmId("170700001");
-
-		int resultStatus = dao.delRent(vo);
+		int resultStatus = dao.delRent(tempVO);
 
 		RentVO searchVO = dao.checkRentDetail(tempVO);
 
 		// searchVO가 없는 경우 null, 존재하는 경우 false 반환
-		assertNull("제거 기능을 거친 상품 정보는 조회되지 않아야 한다.",searchVO);
+		assertNull("제거된 대여 정보는 조회되지 않아야 한다.",searchVO);
 	}
 }
