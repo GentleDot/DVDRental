@@ -189,6 +189,7 @@ public class RentDAOTest {
 	public void selectOneOfRentTest(){
 		vo.setmId("170700001");
 		vo.setrRentdate("20170804");
+		//
 		vo.setStId("2017-item1");
 		
 		dao.addRent(vo);
