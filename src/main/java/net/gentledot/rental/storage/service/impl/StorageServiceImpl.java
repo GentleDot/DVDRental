@@ -76,4 +76,8 @@ public class StorageServiceImpl implements StorageService{
         return dao.delStorage(vo);
     }*/
 
+    public List<StorageVO> totalStorageItems(){
+        return dao.totalStorageItems();
+    }
+
 }

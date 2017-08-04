@@ -1,32 +1,39 @@
-<%@page import="net.gentledot.rental.vo.MemberVO"%>
+<%@page import="net.gentledot.rental.vo.RentVO"%>
 <%@ page import="java.util.List" %>
 <%@ page import="org.springframework.web.servlet.support.RequestContextUtils" %>
 <%@ page import="net.gentledot.utils.Tools" %>
 <%@ page import="java.util.Calendar" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.text.DecimalFormat" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="net.gentledot.rental.vo.StorageVO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko-KR">
 <%
 	String contextPath = request.getContextPath();
-	Calendar calendar = Calendar.getInstance();
-	int curYear = calendar.get(Calendar.YEAR);
-	int curMonth = calendar.get(Calendar.MONTH) + 1;
-	int curDay = calendar.get(Calendar.DAY_OF_MONTH);
+	String mId = (String) request.getAttribute("mId");
+	List<StorageVO> itemList = (List<StorageVO>) request.getAttribute("itemList");
+	Date date = new Date();
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
-	NumberFormat nf = new DecimalFormat("00");
-
-	String curDate = "" + curYear + nf.format(curMonth) + nf.format(curDay);
+	String curDate = sdf.format(date);
 %>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="<%=contextPath%>/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css">
-<title>회원 정보 입력</title>
+<title>대여 정보 입력</title>
 	<style>
 		.row{
 			margin-bottom: 1em;
+		}
+
+		input[type="number"]::-webkit-outer-spin-button,
+		input[type="number"]::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
 		}
 	</style>
 </head>
@@ -36,36 +43,33 @@
 	<section class="main">
 		<section class="row">
 			<div class="col-md-6 col-md-offset-3">
-				<h2 class="h2">회원가입 (추가)</h2>
-				<form action="<%= contextPath %>/member/addMember.do" method="post" class="form-horizontal" name="addMemberForm">
+				<h2 class="h2">상품 대여</h2>
+				<form action="<%= contextPath %>/rent/addRent.do" method="post" class="form-horizontal" name="addRentForm">
 					<ul class="list-group">
 						<li class="list-group-item form-group">
-							<label for="inputMName">회원 이름 : </label>
-							<input type="text" id="inputMName" name="inputMName" class="form-control" />
+							<label for="inputRmId">회원 ID : </label>
+							<input type="text" id="inputRmId" name="inputRmId" class="form-control" value="<%= mId %>" readonly />
 						</li>
 						<li class="list-group-item form-group">
-							<label for="inputMBirth">회원 생일 : </label>
-							<input type="date" id="inputMBirth" name="inputMBirth" class="form-control" />
+							<label for="inputRrentdate">대여 일자 : </label>
+							<input type="text" id="inputRrentdate" name="inputRrentdate" class="form-control" value="<%= curDate %>" readonly />
 						</li>
 						<li class="list-group-item form-group">
-							<label for="inputMJoinDate">가입일 : </label>
-							<input type="text" id="inputMJoinDate" name="inputMJoinDate" class="form-control" value="<%= curDate %>" readonly />
+							<label for="inputRstId">대여 상품 : </label>
+							<select id="inputRstId" name="inputRstId" class="form-control">
+								<% for(StorageVO item : itemList){ %>
+								<option value="<%= item.getStId()%>"><%= item.getpName()%> [<%= item.getStId() %>]</option>
+								<% } %>
+							</select>
+
 						</li>
 						<li class="list-group-item form-group">
-							<label for="inputMAddr">주소 : </label>
-							<input type="text" id="inputMAddr" name="inputMAddr" class="form-control" />
+							<label for="inputRrentPeriod">대여 기간 : </label>
+							<input type="number" id="inputRrentPeriod" name="inputRrentPeriod" class="form-control" min="0" />
 						</li>
 						<li class="list-group-item form-group">
-							<label for="inputMPhone">전화번호 : </label>
-							<input type="number" id="inputMPhone" name="inputMPhone" class="form-control" min="0" />
-						</li>
-						<li class="list-group-item form-group">
-							<label for="inputMMail">이메일 : </label>
-							<input type="email" id="inputMMail" name="inputMMail" class="form-control" />
-						</li>
-						<li class="list-group-item form-group">
-							<label for="chkEmail">이메일 확인 : </label>
-							<input type="email" id="chkEmail" name="chkEmail" class="form-control" />
+							<label for="inputRcharge">대여료 : </label>
+							<input type="number" id="inputRcharge" name="inputRcharge" class="form-control" min="0" />
 						</li>
 					</ul>
 					<div class="form-group">

@@ -16,7 +16,7 @@
         <a href="<%= contextPath %>/member/memberList.do">회원 페이지</a>
         <a href="<%= contextPath %>/product/productList.do">제품 페이지</a>
         <a href="<%= contextPath %>/storage/storageList.do">재고 페이지</a>
-        <a href="<%= contextPath %>/rental/rentalList.do">대여 페이지</a>
+        <a href="<%= contextPath %>/rent/rentList.do">대여 페이지</a>
     </div>
 </body>
 </html>

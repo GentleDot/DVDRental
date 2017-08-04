@@ -5,6 +5,7 @@ import net.gentledot.rental.persistance.RentDAO;
 import net.gentledot.rental.rent.service.RentService;
 import net.gentledot.rental.vo.RentVO;
 import net.gentledot.utils.Pagination;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,6 +19,8 @@ import java.util.Map;
  */
 @Service(value = "rentService")
 public class RentServiceImpl implements RentService{
+    private static final Logger LOG = Logger.getLogger(RentServiceImpl.class);
+
     @Resource(name = "rentDao")
     RentDAO dao;
 
@@ -30,6 +33,13 @@ public class RentServiceImpl implements RentService{
         vo.setmId(mId);
         vo.setPageNo(pageNo);
         vo.setPageSize(pageSize);
+
+        LOG.debug("--------------------------");
+        LOG.debug("mId : " + mId);
+        LOG.debug("pageNo : " + pageNo);
+        LOG.debug("pageSize : " + pageSize);
+        LOG.debug("pageScope : " + pageScope);
+        LOG.debug("--------------------------");
         List<RentVO> returnList = dao.selectRentListByMemberID(vo);
 
         int totalCnt = dao.totalCountOfRentList();

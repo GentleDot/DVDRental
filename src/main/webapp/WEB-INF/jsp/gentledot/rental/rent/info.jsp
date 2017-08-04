@@ -1,37 +1,18 @@
-<%@page import="net.gentledot.rental.vo.MemberVO"%>
+<%@page import="net.gentledot.rental.vo.RentVO"%>
 <%@ page import="net.gentledot.utils.Tools" %>
-<%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="java.text.ParseException" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 		 pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko-KR">
 <%
 	String contextPath = request.getContextPath();
-	MemberVO oneOfMember = (MemberVO) request.getAttribute("oneOfMember");
-
-    String memberStatus = Tools.customToEmptyBlank(oneOfMember.getmStatus(), "").equals("M") ? "회원" : "탈퇴";
-
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
-	Date tempBirth= null;
-	Date tempJoindate= null;
-	try {
-		tempBirth = sdf2.parse(oneOfMember.getmBirth());
-		tempJoindate = sdf2.parse(oneOfMember.getmJoinDate());
-	} catch (ParseException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	String mBirth = sdf.format(tempBirth);
-	String mJoindate = sdf.format(tempJoindate);
-
+	RentVO details = (RentVO) request.getAttribute("details");
+	
 %>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="<%=contextPath%>/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css">
-<title>회원 상세조회</title>
+<title>대여 정보 상세조회</title>
 	<style>
 		.row{
 			margin-bottom: 1em;
@@ -44,54 +25,50 @@
 	<section class="main">
 		<section class="row">
 			<div class="col-md-6 col-md-offset-3">
-				<h2 class="h2">회원 정보</h2>
+				<h2 class="h2">대여 정보</h2>
 				<ul class="list-group">
                     <li class="list-group-item form-group">
-                        <label for="getMId">회원 ID : </label>
-                        <input type="text" id="getMId" name="getMId" class="form-control" value="<%= Tools.customToEmptyBlank(oneOfMember.getmId(), "") %>" readonly/>
+                        <label for="getRmId">대여 ID : </label>
+                        <input type="text" id="getRmId" name="getRmId" class="form-control" value="<%= Tools.customToEmptyBlank(details.getmId(), "") %>" readonly/>
                     </li>
 					<li class="list-group-item form-group">
-						<label for="getMName">회원 이름 : </label>
-						<input type="text" id="getMName" name="getMName" class="form-control" value="<%= Tools.customToEmptyBlank(oneOfMember.getmName(), "") %>" readonly/>
+						<label for="getRrentdate">대여 일자 : </label>
+						<input type="text" id="getRrentdate" name="getRrentdate" class="form-control" value="<%= Tools.customToEmptyBlank(details.getrRentdate(), "") %>" readonly/>
 					</li>
 					<li class="list-group-item form-group">
-						<label for="getMBirth">회원 생일 : </label>
-						<input type="text" id="getMBirth" name="getMBirth" class="form-control" value="<%= Tools.customToEmptyBlank(mBirth, "9999-99-99")%>" readonly/>
+						<label for="getRstId">대여 상품 : </label>
+						<input type="text" id="getRstId" name="getRstId" class="form-control" value="<%= Tools.customToEmptyBlank(details.getStId(), "")%>" readonly/>
 					</li>
 					<li class="list-group-item form-group">
-						<label for="getMJoinDate">회원가입일 : </label>
-						<input type="text" id="getMJoinDate" name="getMJoinDate" class="form-control" value="<%= Tools.customToEmptyBlank(mJoindate, "9999-99-99") %>" readonly />
+						<label for="getRrentPeriod">대여 기간 : </label>
+						<input type="text" id="getRrentPeriod" name="getRrentPeriod" class="form-control" value="<%= Tools.customToEmptyBlank(details.getrRentperiod(), "0") %>" readonly />
 					</li>
 					<li class="list-group-item form-group">
-						<label for="getMAddr">주소 : </label>
-						<input type="text" id="getMAddr" name="getMAddr" class="form-control" value="<%= Tools.customToEmptyBlank(oneOfMember.getmAddr(), "") %>" readonly />
+						<label for="getRcharge">대여료 : </label>
+						<input type="text" id="getRcharge" name="getRcharge" class="form-control" value="<%= Tools.customToEmptyBlank(details.getrCharge(), "0") %>" readonly />
 					</li>
 					<li class="list-group-item form-group">
-						<label for="getMPhone">전화번호 : </label>
-						<input type="text" id="getMPhone" name="getMPhone" class="form-control" min="0" value="<%= Tools.customToEmptyBlank(oneOfMember.getmPhone(), "") %>" readonly />
+						<label for="getRreturndate">반납 일자 : </label>
+						<input type="text" id="getRreturndate" name="getRreturndate" class="form-control" min="0" value="<%= Tools.customToEmptyBlank(details.getrReturndate(), "") %>" readonly />
 					</li>
 					<li class="list-group-item form-group">
-						<label for="getMMail">이메일 : </label>
-						<input type="email" id="getMMail" name="getMMail" class="form-control" value="<%= Tools.customToEmptyBlank(oneOfMember.getmMail(), "") %>" readonly />
+						<label for="getRreturnStatus">반납 확인 : </label>
+						<input type="text" id="getRreturnStatus" name="getRreturnStatus" class="form-control" value="<%= Tools.customToEmptyBlank(details.getrReturnStatus(), "") %>" readonly />
 					</li>
 					<li class="list-group-item form-group">
-						<label for="getMLimit">대여제한 : </label>
-						<input type="number" id="getMLimit" name="getMLimit" class="form-control" value="<%= Tools.customToEmptyBlank(oneOfMember.getmLimit(), "") %>" readonly />
+						<label for="getRarrears">연체료 : </label>
+						<input type="number" id="getRarrears" name="getRarrears" class="form-control" value="<%= Tools.customToEmptyBlank(details.getrArrears(), "") %>" readonly />
 					</li>
                     <li class="list-group-item form-group">
-                        <label for="getMStatus">회원상태 : </label>
-                        <input type="text" id="getMStatus" name="getMStatus" class="form-control" value="<%= memberStatus %>" readonly />
-                    </li>
-                    <li class="list-group-item form-group">
-                        <label for="getMOutdate">탈퇴일 : </label>
-                        <input type="text" id="getMOutdate" name="getMOutdate" class="form-control" value="<%= Tools.customToEmptyBlank(oneOfMember.getmOutDate(), "") %>" readonly />
+                        <label for="getRarrearsClear">연체료 납부일 : </label>
+                        <input type="number" id="getRarrearsClear" name="getRarrearsClear" class="form-control" min="0" value="<%= Tools.customToEmptyBlank(details.getrArrearsClear(), "")%>" readonly />
                     </li>
 				</ul>
 
                 <div class="btn-group">
-                    <a href="<%= contextPath %>/member/memberList.do" class="btn btn-default">목록으로</a>
-                    <a href="<%= contextPath %>/member/memberModifyView.do?mId=<%= Tools.customToEmptyBlank(oneOfMember.getmId(), "") %>" class="btn btn-info">정보수정</a>
-                    <a href="<%= contextPath %>/member/memberDel.do.do?mId=<%= Tools.customToEmptyBlank(oneOfMember.getmId(), "") %>" class="btn btn-warning">회원삭제</a>
+                    <a href="<%= contextPath %>/rent/rentList.do" class="btn btn-default">목록으로</a>
+                    <a href="<%= contextPath %>/rent/rentModifyView.do?mId=<%= details.getmId() %>&rentdate=<%= details.getrRentdate()%>&stId=<%= details.getStId() %>" id="updateRentInfo" class="btn btn-info">정보 업데이트</a>
+                    <a href="<%= contextPath %>/rent/rentDel.do?mId=<%= details.getmId() %>&rentdate=<%= details.getrRentdate()%>&stId=<%= details.getStId() %>" class="btn btn-warning">대여 정보 삭제</a>
                 </div>
 
 			</div>
@@ -104,18 +81,13 @@
 <script src="<%=contextPath%>/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 <script>
 	$(function(){
-	    convertPhoneNum();
+	    returnChk();
 
-		function convertPhoneNum() {
-            var phoneNum = $('#getMPhone').val();
-            var convertedTel = "";
-            if (phoneNum.length === 11){
-                convertedTel = phoneNum.substr(0, 3) + "-" + phoneNum.substr(3, 4) + "-" + phoneNum.substr(7, 4);
-            }else if (phoneNum.length === 10){
-convertedTel = phoneNum.substr(0, 3) + "-" + phoneNum.substr(3, 3) + "-" + phoneNum.substr(6, 4);
+	    function returnChk(){
+	        var status = $('#getRreturnStatus').val();
+            if(status === 'Y'){
+                $('#updateRentInfo').attr('disabled', 'true').bind('click', false);
             }
-
-            $('#getMPhone').val(convertedTel);
         }
 	});
 </script>

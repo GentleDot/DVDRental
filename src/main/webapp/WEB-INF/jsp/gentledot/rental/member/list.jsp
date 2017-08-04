@@ -28,7 +28,7 @@
 	<header></header>
 	<section class="main">
 		<section class="row">
-			<div class="col-md-12">
+			<div class="col-md-8 col-md-offset-2">
 				<h2>회원 목록</h2>
 				<form action="<%= contextPath %>/member/memberList.do" method="post" class="form-inline" name="sendSearchKeyword">
 					<fieldset class="form-group">
@@ -49,7 +49,7 @@
 			</div>
 		</section>
 		<section class="row">
-			<div class="col-md-12">
+			<div class="col-md-8 col-md-offset-2">
 				<div class="text-right">
 					<a href="<%= contextPath %>/member/addMemberView.do" class="btn btn-success">회원 추가</a>
 				</div>
@@ -63,6 +63,7 @@
 						<th>가입일</th>
 						<th>연락처</th>
 						<th>대여 가능 개수</th>
+						<th>대여</th>
 					</tr>
 					</thead>
 					<tfoot>
@@ -84,6 +85,9 @@
 							<td><%=Tools.customToEmptyBlank(member.getmPhone(), "")%>
 							</td>
 							<td><%=Tools.customToEmptyBlank(member.getmLimit(), "0")%>
+							</td>
+							<td>
+								<a href="<%= contextPath %>/rent/addRentView.do?mId=<%=member.getmId()%>" class="btn btn-default">상품 대여</a>
 							</td>
 						</tr>
 					<% }%>

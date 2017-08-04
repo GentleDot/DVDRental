@@ -19,6 +19,10 @@ public class StorageDAO extends EgovAbstractMapper {
         return selectOne("totalCountOfStorageList");
     }
 
+    public List<StorageVO> totalStorageItems(){
+        return selectList("totalStorageItems");
+    }
+
     public StorageVO selectOneOfStorage(StorageVO vo){
         return selectOne("selectOneOfStorage", vo);
     }

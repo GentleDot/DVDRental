@@ -53,6 +53,17 @@
 		)
 	</select>
 
+	<select id="totalStorageItems" resultMap="storageMap">
+		SELECT
+			s.ST_ID, s.ST_GETDATE, s.P_ID, p.P_NAME, s.ST_STATUS, s.ST_WASTEDATE, s.ST_WASTECOST, s.ST_WASTE_REASON
+			FROM
+				STORAGE s, PRODUCT p
+			WHERE
+				s.P_ID = p.P_ID
+			ORDER BY
+				ST_GETDATE ASC
+	</select>
+
 	<select id="selectOneOfStorage" parameterType="storageVO" resultMap="storageMap">
 		SELECT
 		s.ST_ID, s.ST_GETDATE, s.P_ID, p.P_NAME, s.ST_STATUS, s.ST_WASTEDATE, s.ST_WASTECOST, s.ST_WASTE_REASON

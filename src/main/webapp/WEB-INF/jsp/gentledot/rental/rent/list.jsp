@@ -1,6 +1,5 @@
 <%@page import="net.gentledot.rental.vo.RentVO"%>
 <%@ page import="java.util.List" %>
-<%@ page import="org.springframework.web.servlet.support.RequestContextUtils" %>
 <%@ page import="net.gentledot.utils.Tools" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -45,15 +44,12 @@
 							<input type="submit" class="btn btn-default" value="검색"/>
 						</div>
 					</fieldset>
-					<input type="hidden" name="pageNo" value="${pagination.pageNo}">
+					<input type="hidden" name="pageNo" value="<%= pageNo %>">
 				</form>
 			</div>
 		</section>
 		<section class="row">
 			<div class="col-md-8 col-md-offset-2">
-				<div class="text-right">
-					<a href="<%= contextPath %>/rent/addRentView.do" class="btn btn-success">대여 추가</a>
-				</div>
 				<table class="table table-bordered">
 					<caption class="sr-only">DVD 대여점 대여 목록</caption>
 					<thead>
@@ -72,7 +68,20 @@
 					</tfoot>
 					<tbody>
 					<% for(RentVO rent : resultList){ %>
+					<%
+						if(rent.getrReturnStatus() != null){
+							if(rent.getrReturnStatus().equals("Y")){
+					%>
+						<tr class="bg-warning">
+					<%
+							}
+						}else{
+					%>
 						<tr>
+					<%
+						}
+					%>
+
 							<td>
 								<a href="<%= contextPath %>/rent/rentInfo.do?mId=<%= rent.getmId() %>&rentdate=<%= rent.getrRentdate()%>&stId=<%= rent.getStId() %>"><%=Tools.customToEmptyBlank(rent.getmId(), "")%></a>
 							</td>
@@ -88,13 +97,9 @@
 							</td>
 							<td><%=Tools.customToEmptyBlank(rent.getrReturndate(), "")%>
 							</td>
-							<% if(rent.getrReturnStatus().equals("Y")){ %>
-							<td><%=Tools.customToEmptyBlank(rent.getrReturnStatus(), "")%>
+							<td>
+								<%=Tools.customToEmptyBlank(rent.getrReturnStatus(), "")%>
 							</td>
-							<% }else{ %>
-							    <td class="bg-warning"><%=Tools.customToEmptyBlank(rent.getrReturnStatus(), "")%>
-							</td>
-							<% } %>
 						</tr>
 					<% }%>
 					</tbody>

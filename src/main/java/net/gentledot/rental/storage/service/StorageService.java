@@ -2,6 +2,7 @@ package net.gentledot.rental.storage.service;
 
 import net.gentledot.rental.vo.StorageVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,4 +13,5 @@ public interface StorageService {
     public StorageVO getOneOfStorage(StorageVO vo);
     public int addStorage(StorageVO vo);
     public int updateStorage(StorageVO vo);
+    public List<StorageVO> totalStorageItems();
 }

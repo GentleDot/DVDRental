@@ -13,6 +13,15 @@ public class RentVO extends PaginationVO {
     private String rReturnStatus;
     private String rArrears;
     private String rArrearsClear;
+    private String pName;
+
+    public String getpName() {
+        return pName;
+    }
+
+    public void setpName(String pName) {
+        this.pName = pName;
+    }
 
     public String getmId() {
         return mId;

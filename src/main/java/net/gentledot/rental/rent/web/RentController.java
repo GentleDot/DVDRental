@@ -1,7 +1,9 @@
 package net.gentledot.rental.rent.web;
 
 import net.gentledot.rental.rent.service.RentService;
+import net.gentledot.rental.storage.service.StorageService;
 import net.gentledot.rental.vo.RentVO;
+import net.gentledot.rental.vo.StorageVO;
 import net.gentledot.utils.Pagination;
 import net.gentledot.utils.Tools;
 import org.apache.log4j.Logger;
@@ -26,6 +28,9 @@ public class RentController {
 	
 	@Resource(name="rentService")
 	private RentService rentService;
+
+	@Resource(name="storageService")
+	private StorageService storageService;
 	
 	@RequestMapping("/rent/rentList.do")
 	public String selectRentList(@RequestParam HashMap<String, String> req, ModelMap model){
@@ -36,7 +41,7 @@ public class RentController {
 		
 		String category = Tools.toEmptyBlank(req.get("category"));
 		String keyword = Tools.toEmptyBlank(req.get("keyword"));
-		String getPageNo = Tools.customToEmptyBlank(req.get("pageNo"), "0");
+		String getPageNo = Tools.customToEmptyBlank(req.get("pageNo"), "1");
 		
 		int pageNo = Integer.parseInt(getPageNo);
 		
@@ -50,11 +55,17 @@ public class RentController {
 			resultMap = rentService.getRentListByItem(keyword, PAGE_SIZE, pageNo, PAGE_SCOPE);
 			break;
 		default:
-			resultMap = resultMap = rentService.getRentListByMember(keyword, PAGE_SIZE, pageNo, PAGE_SCOPE);
+			resultMap = rentService.getRentListByMember(keyword, PAGE_SIZE, pageNo, PAGE_SCOPE);
 			break;
 		}
 		
 		List<RentVO> resultList = (List<RentVO>) resultMap.get("resultList");
+
+		LOGGER.debug("----------------------");
+		LOGGER.debug("resultMap 존재 여부 : " +  resultMap.containsKey("resultList"));
+		LOGGER.debug("결과 리스트 크기 : " +  resultList.size());
+		LOGGER.debug("----------------------");
+
 		Pagination pag = (Pagination) resultMap.get("pagination");
 		
 		model.addAttribute("resultList", resultList);
@@ -68,145 +79,114 @@ public class RentController {
 	
 	@RequestMapping("/rent/addRentView.do")
 	public String addRentView(@RequestParam HashMap<String, String> req, ModelMap model){
+		String mId = Tools.customToEmptyBlank(req.get("mId"), "");
+
+		List<StorageVO> itemList = storageService.totalStorageItems();
+
+		model.addAttribute("mId", mId);
+		model.addAttribute("itemList", itemList);
+
 		return "rental/rent/insert";
 	}
-/*
+
 	@RequestMapping("/rent/addRent.do")
 	public String addRentInList(@RequestParam HashMap<String, String> req, ModelMap model){
-		LOGGER.debug("====================");
-		LOGGER.debug("전달받은 생일 : " + req.get("inputMBirth"));
-		LOGGER.debug("전달받은 전화번호 : " + req.get("inputMPhone"));
-		LOGGER.debug("====================");
-		
-		
-		String mName = Tools.customToEmptyBlank(req.get("inputMName"),"");
-		String mBirthStr = Tools.customToEmptyBlank(req.get("inputMBirth"),"9999-99-99");
-		String mJoinDate = Tools.customToEmptyBlank(req.get("inputMJoinDate"),"");
-		String mAddr = Tools.customToEmptyBlank(req.get("inputMAddr"),"");
-		String mPhone = Tools.customToEmptyBlank(req.get("inputMPhone"),"");
-		String mMail = Tools.customToEmptyBlank(req.get("inputMMail"),"");
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
-		Date tempBirth = null;
-		try {
-			tempBirth = sdf.parse(mBirthStr);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String mBirth = sdf2.format(tempBirth);
-		
+
+		String mId = Tools.customToEmptyBlank(req.get("inputRmId"),"");
+		String rentdate = Tools.customToEmptyBlank(req.get("inputRrentdate"),"");
+		String stId = Tools.customToEmptyBlank(req.get("inputRstId"),"");
+		String rentPeriod = Tools.customToEmptyBlank(req.get("inputRrentPeriod"),"");
+		String charge = Tools.customToEmptyBlank(req.get("inputRcharge"),"");
+
 		RentVO vo = new RentVO();
-		vo.setmName(mName);
-		vo.setmBirth(mBirth);
-		vo.setmJoinDate(mJoinDate);
-		vo.setmAddr(mAddr);
-		vo.setmPhone(mPhone);
-		vo.setmMail(mMail);
+		vo.setmId(mId);
+		vo.setrRentdate(rentdate);
+		vo.setStId(stId);
+		vo.setrRentperiod(rentPeriod);
+		vo.setrCharge(charge);
 		
 		int resultStatus = rentService.addRent(vo);
 		
 		return "redirect:/rent/rentList.do";
 	}
-	
+
+
 	@RequestMapping("/rent/rentInfo.do")
 	public String selectOneOfRent(@RequestParam HashMap<String, String> req, ModelMap model){
 		String mId = Tools.customToEmptyBlank(req.get("mId"), "");
+		String rentdate = Tools.customToEmptyBlank(req.get("rentdate"), "");
+		String stId = Tools.customToEmptyBlank(req.get("stId"), "");
+
 		RentVO vo = new RentVO();
 		vo.setmId(mId);
+		vo.setrRentdate(rentdate);
+		vo.setStId(stId);
 		
-		RentVO selectedRent = rentService.selectOneOfRent(vo);
+		RentVO selectedRent = rentService.checkRentDetail(vo);
 		
-		model.addAttribute("oneOfRent", selectedRent);
+		model.addAttribute("details", selectedRent);
 		
 		return "rental/rent/info";
 	}
-	
+
+
 	@RequestMapping("/rent/rentModifyView.do")
 	public String updateRentInfoView(@RequestParam HashMap<String, String> req, ModelMap model){
 		String mId = Tools.customToEmptyBlank(req.get("mId"), "");
-		
+		String rentdate = Tools.customToEmptyBlank(req.get("rentdate"), "");
+		String stId = Tools.customToEmptyBlank(req.get("stId"), "");
+
 		RentVO vo = new RentVO();
 		vo.setmId(mId);
-		
-		RentVO selectedRent = rentService.selectOneOfRent(vo);
-		
-		model.addAttribute("oneOfRent", selectedRent);
+		vo.setrRentdate(rentdate);
+		vo.setStId(stId);
+
+		RentVO selectedRent = rentService.checkRentDetail(vo);
+
+		model.addAttribute("details", selectedRent);
 		
 		return "rental/rent/modify";
 	}
 	
 	@RequestMapping("/rent/rentModify.do")
 	public String updateRentInfo(@RequestParam HashMap<String, String> req, ModelMap model){
-		
-		LOGGER.debug("======================");
-		LOGGER.debug("넘어온 phone 값 : " + req.get("getMPhone"));
-		LOGGER.debug("======================");
-		
-		String mId = Tools.customToEmptyBlank(req.get("getMId"),"");
-		String mName = Tools.customToEmptyBlank(req.get("getMName"),"");
-		String mBirthStr = Tools.customToEmptyBlank(req.get("getMBirth"),"9999-99-99");
-		String mJoinDateStr = Tools.customToEmptyBlank(req.get("getMJoinDate"),"9999-99-99");
-		String mAddr = Tools.customToEmptyBlank(req.get("getMAddr"),"");
-		String mPhone = Tools.customToEmptyBlank(req.get("getMPhone"),"");
-		String mMail = Tools.customToEmptyBlank(req.get("getMMail"),"");
-		String mLimit = Tools.customToEmptyBlank(req.get("getMLimit"),"5");
-		String mStatusStr = Tools.customToEmptyBlank(req.get("getMStatus"),"회원");
-		String mOutdateStr = Tools.customToEmptyBlank(req.get("getMOutdate"),"");
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
-		Date tempBirth= null;
-		Date tempJoindate= null;
-		try {
-			tempBirth = sdf.parse(mBirthStr);
-			tempJoindate = sdf.parse(mJoinDateStr);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String mBirth = sdf2.format(tempBirth);
-		String mJoindate = sdf2.format(tempJoindate);
-		
-		
-		String mOutdate = "";
-		if (!mOutdateStr.equals("")){
-			Date tempOutdate = null;
-			try {
-				tempOutdate = sdf.parse(mOutdateStr);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			mOutdate = sdf2.format(tempOutdate);
-		}else{
-			mOutdate = mOutdateStr;
-		}
-		
-		String mStatus =  mStatusStr.equals("회원") ? "M" : "O";
-		
-		
-		/*RentVO vo = new RentVO();
+
+		String mId = Tools.customToEmptyBlank(req.get("getRmId"), "");
+		String rentdate = Tools.customToEmptyBlank(req.get("getRrentdate"), "");
+		String stId = Tools.customToEmptyBlank(req.get("getRstId"), "");
+		String returndate = Tools.customToEmptyBlank(req.get("getRreturndate"), "");
+		String returnStatus = Tools.customToEmptyBlank(req.get("getRreturnStatus"), "");
+		String arrears = Tools.customToEmptyBlank(req.get("getRarrears"), "");
+		String arrearsClear = Tools.customToEmptyBlank(req.get("getRarrearsClear"), "");
+
+		RentVO vo = new RentVO();
 		vo.setmId(mId);
-		vo.setmName(mName);
-		vo.setmBirth(mBirth);
-		vo.setmJoinDate(mJoindate);
-		vo.setmAddr(mAddr);
-		vo.setmPhone(mPhone);
-		vo.setmMail(mMail);
-		vo.setmLimit(mLimit);
-		vo.setmStatus(mStatus);
-		vo.setmOutDate(mOutdate);*/
+		vo.setrRentdate(rentdate);
+		vo.setStId(stId);
+		vo.setrReturndate(returndate);
+		vo.setrReturnStatus(returnStatus);
+		vo.setrArrears(arrears);
+		vo.setrArrearsClear(arrearsClear);
 		
-		/*int resultStatus = rentService.updateRent(vo);
+		int resultStatus = rentService.updateRent(vo);
 		
 		return "redirect:/rent/rentList.do";
 	}
 	
 	@RequestMapping("/rent/rentDel.do")
 	public String delRent(@RequestParam HashMap<String, String> req, ModelMap model){
+		String mId = Tools.customToEmptyBlank(req.get("mId"), "");
+		String rentdate = Tools.customToEmptyBlank(req.get("rentdate"), "");
+		String stId = Tools.customToEmptyBlank(req.get("stId"), "");
+
+		RentVO vo = new RentVO();
+		vo.setmId(mId);
+		vo.setrRentdate(rentdate);
+		vo.setStId(stId);
+
+		int resultStatus = rentService.delRent(vo);
+
 		return "redirect:/rent/rentList.do";
-	}*/
+	}
 
 }
