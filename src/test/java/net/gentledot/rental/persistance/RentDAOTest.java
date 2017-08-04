@@ -10,12 +10,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 
@@ -28,10 +30,15 @@ public class RentDAOTest {
 	
 	@Resource(name = "rentDao")
 	RentDAO dao;
-	
+
 	private RentVO vo;
+
+	@Before
+	public void setUp(){
+		vo = new RentVO();
+	}
 	
-	/*재고 입력 테스트*/
+	/*대여 입력 테스트*/
 	@Test
 	public void addRentTest(){
 		Date date = new Date();
@@ -43,116 +50,228 @@ public class RentDAOTest {
 		String stId = "2017-item1";
 		// 오늘 날짜 설정
 		String rRentdate = sdf.format(date);
+		// 대여 기간 설정
+		String rRentPeriod = "5";
+		// 대여료 설정
+		String rCharge = "5000";
 
 		RentVO vo = new RentVO();
 		vo.setmId(mId);
-		vo.setStId();
+		vo.setStId(stId);
+		vo.setrRentdate(rRentdate);
+		vo.setrRentperiod(rRentPeriod);
+		vo.setrCharge(rCharge);
 
 		int resultStatus = dao.addRent(vo);
 		
 		assertThat(resultStatus == 1, is(true));
 	}
 
-	/*재고 목록 조회 테스트*/
+	/*대여 목록 조회 테스트 - id*/
 	@Test
 	public void selectRentListTest(){
-		// stId를 1부터 10까지 입력
-		for(int i = 1; i <= 10; i++){
+		String mId = "170700001";
+
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String curDate = sdf.format(date);
+		String rRentPeriod = "5";
+		String rCharge = "5000";
+
+		// 총 3개 대여건
+		for(int i = 1; i <= 3; i++){
 			RentVO tempVO = new RentVO();
+			tempVO.setmId(mId);
+			tempVO.setrRentdate(curDate);
 			tempVO.setStId("2017-item"+i);
-			// 테스트를 위해 제품 1을 10개로 가정
-			tempVO.setpId("1");
+			/*tempVO.setrRentperiod(rRentPeriod);
+			tempVO.setrCharge(rCharge);*/
 
 			dao.addRent(tempVO);
 		}
-		vo.setStId("");
+
+		vo.setmId("");
 		vo.setPageNo(1);
 		vo.setPageSize(10);
-		List<RentVO> resultList = dao.selectRentList(vo);
+		List<RentVO> resultList = dao.selectRentListByMemberID(vo);
 
-		assertThat(resultList.size(), is(10));
+		// 테스트로 넣은 데이터 포함 갯수
+		assertThat(resultList.size(), is(3 + 1));
 	}
 
-	/*재고 총계 확인 테스트*/
+	/*대여 목록 조회 테스트 - 대여일 */
+	@Test
+	public void selectRentListByRentdateTest(){
+		String mId = "170700001";
+
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String curDate = sdf.format(date);
+		String rRentPeriod = "5";
+		String rCharge = "5000";
+
+		// 총 3개 대여건
+		for(int i = 1; i <= 3; i++){
+			RentVO tempVO = new RentVO();
+			tempVO.setmId(mId);
+			tempVO.setrRentdate(curDate);
+			tempVO.setStId("2017-item"+i);
+			/*tempVO.setrRentperiod(rRentPeriod);
+			tempVO.setrCharge(rCharge);*/
+
+			dao.addRent(tempVO);
+		}
+
+		vo.setrRentdate("201707");
+		vo.setPageNo(1);
+		vo.setPageSize(10);
+		List<RentVO> resultList = dao.selectRentListByRentdate(vo);
+
+		// 테스트로 넣은 데이터 포함 갯수
+		assertThat(resultList.size(), is(0));
+	}
+
+	/*대여 목록 조회 테스트 - 상품 */
+	@Test
+	public void selectRentListByItemTest(){
+		String mId = "170700001";
+
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String curDate = sdf.format(date);
+		String rRentPeriod = "5";
+		String rCharge = "5000";
+
+		// 총 3개 대여건
+		for(int i = 1; i <= 3; i++){
+			RentVO tempVO = new RentVO();
+			tempVO.setmId(mId);
+			tempVO.setrRentdate(curDate);
+			tempVO.setStId("2017-item"+i);
+			/*tempVO.setrRentperiod(rRentPeriod);
+			tempVO.setrCharge(rCharge);*/
+
+			dao.addRent(tempVO);
+		}
+
+		vo.setStId("2017-item2");
+		vo.setPageNo(1);
+		vo.setPageSize(10);
+		List<RentVO> resultList = dao.selectRentListByItemID(vo);
+
+		// 테스트로 넣은 데이터 포함 갯수
+		assertThat(resultList.size(), is(1));
+	}
+
+
+	/*대여 총계 확인 테스트*/
 	@Test
 	public void totalCountOfRentListTest(){
-		// stId를 1부터 10까지 입력
-		for(int i = 1; i <= 10; i++){
+		// 총 3개 대여건
+		for(int i = 1; i <= 3; i++){
 			RentVO tempVO = new RentVO();
+			tempVO.setmId("170700001");
+			tempVO.setrRentdate("20170801");
 			tempVO.setStId("2017-item"+i);
-			// 테스트를 위해 제품 1을 10개로 가정
-			tempVO.setpId("1");
+			/*tempVO.setrRentperiod(rRentPeriod);
+			tempVO.setrCharge(rCharge);*/
 
 			dao.addRent(tempVO);
 		}
 
 		int totalCnt = dao.totalCountOfRentList();
 
-		assertThat(totalCnt, is(10));
+		assertThat(totalCnt, is(3 + 1));
 	}
 
-	/* 재고 상세정보 확인 테스트*/
+	/* 회원 대여 목록 확인 테스트*/
 	@Test
 	public void selectOneOfRentTest(){
+		vo.setmId("170700001");
+		vo.setrRentdate("20170804");
 		vo.setStId("2017-item1");
-		vo.setpId("1");
 		
 		dao.addRent(vo);
 		
-		RentVO resultVO = dao.selectOneOfRent(vo);
-		String stId = resultVO.getStId();
-		assertThat(stId, is("2017-item1"));
+		List<RentVO> resultList = dao.selectOneOfRent(vo);
+		assertThat(resultList.size(), is(1));
 	}
 
-	/*재고 정보 수정 테스트*/
+	/* 대여 상세 정보 확인 테스트*/
+	@Test
+	public void checkRentDetailTest(){
+		vo.setmId("170700001");
+		vo.setrRentdate("20170804");
+		vo.setStId("2017-item1");
+
+		dao.addRent(vo);
+
+		RentVO resultVO = dao.checkRentDetail(vo);
+		assertThat(resultVO.getStId(), is("2017-item1"));
+	}
+
+	/*대여 정보 수정 테스트*/
 	@Test
 	public void updateRentTest(){
+		String rentdate = "20170804";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Date convertedRentdate = null;
+		try {
+			convertedRentdate = sdf.parse(rentdate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(convertedRentdate);
+		cal.add(Calendar.DAY_OF_YEAR, 5);
+
+		String returndate = sdf.format(cal.getTime());
+
 		RentVO tempVO = new RentVO();
+		tempVO.setmId("170700001");
+		tempVO.setrRentdate("20170804");
 		tempVO.setStId("2017-item1");
-		tempVO.setpId("1");
-		tempVO.setStGetdate("20171222");
-		tempVO.setStStatus("정상");
 
 		dao.addRent(tempVO);
 
+		vo.setmId("170700001");
+		vo.setrRentdate("20170804");
 		vo.setStId("2017-item1");
-		// 상태는 '정상', '분실', '파손' 기입이 가능하다
-		vo.setStStatus("분실");
-		// 상태가 '정상'에서 변경되는 경우에만 기입
-		vo.setStWastedate("20170820");
-		// (고민필요) 구입가가 비용이 되도록 설정
-		vo.setStWastecost("22000");
-		// (고민필요) 상태 변경 사유를 기입
-		vo.setStWasteReason("고객 테스트1(170700001)의 장기 미반납으로 인한 분실 처리");
-
+		// 반납일
+		vo.setrReturndate("20170809");
+		// 반납 처리되면 "Y"
+		vo.setrReturnStatus("Y");
+		// 연체료 설정
+		vo.setrArrears("0");
+		// 연체료 납부일 (연체료가 0이 아닌 경우에만 기입)
+		vo.setrArrearsClear("");
 		int resultStatus = dao.updateRent(vo);
 
-		RentVO searchVO = dao.selectOneOfRent(tempVO);
-		String wastDate = searchVO.getStWastedate();
-		String stStatus = searchVO.getStStatus();
+		RentVO searchVO = dao.checkRentDetail(tempVO);
+		String getReturnStatus = searchVO.getrReturnStatus();
+		String getReturndate = searchVO.getrReturndate();
 
-		assertThat(stStatus, is("분실"));
-		assertThat(wastDate, is("20170820"));
+		assertThat(getReturnStatus, is("Y"));
+		assertThat(getReturndate, is(returndate));
 	}
-/*재고 삭제 테스트*//*
+	/*대여 삭제 테스트*/
 	@Test
 	public void delRentTest(){
 		RentVO tempVO = new RentVO();
+		tempVO.setmId("170700001");
+		tempVO.setrRentdate("20170804");
 		tempVO.setStId("2017-item1");
-		tempVO.setpId("1");
-		tempVO.setStGetdate("20171222");
-		tempVO.setStStatus("정상");
 
 		dao.addRent(tempVO);
 
-		vo.setStId("2017-item1");
+		vo.setmId("170700001");
 
 		int resultStatus = dao.delRent(vo);
 
-		RentVO searchVO = dao.selectOneOfRent(vo);
+		RentVO searchVO = dao.checkRentDetail(tempVO);
 
 		// searchVO가 없는 경우 null, 존재하는 경우 false 반환
 		assertNull("제거 기능을 거친 상품 정보는 조회되지 않아야 한다.",searchVO);
-	}*/
-
+	}
 }

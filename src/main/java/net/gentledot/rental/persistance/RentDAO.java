@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Created by gd on 2017-07-26.
+ * Created by gd on 2017-08-03.
  */
 @Repository(value = "rentDao")
 public class RentDAO extends EgovAbstractMapper {
@@ -19,12 +19,20 @@ public class RentDAO extends EgovAbstractMapper {
         return selectList("selectRentListByRentdate", vo);
     }
 
-    public int totalCountOfRentList(){
-        return selectOne("totalCountOfRentList");
+    public List<RentVO> selectRentListByItemID(RentVO vo){
+        return selectList("selectRentListByItemID", vo);
     }
 
-    public RentVO selectOneOfRent(RentVO vo){
-        return selectOne("selectOneOfRent", vo);
+    public List<RentVO> selectOneOfRent(RentVO vo){
+        return selectList("selectOneOfRent", vo);
+    }
+
+    public RentVO checkRentDetail(RentVO vo){
+        return selectOne("checkRentDetail", vo);
+    }
+
+    public int totalCountOfRentList(){
+        return selectOne("totalCountOfRentList");
     }
 
     public int addRent(RentVO vo){
