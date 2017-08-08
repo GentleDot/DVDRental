@@ -3,6 +3,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.text.ParseException" %>
+<%@ page import="java.util.Calendar" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 		 pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -10,6 +11,31 @@
 <%
 	String contextPath = request.getContextPath();
 	RentVO details = (RentVO) request.getAttribute("details");
+
+	Date curDate = new Date();
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
+
+	String returndate = sdf.format(curDate);
+
+	String rentdateStr = details.getrRentdate();
+	Date tempRentdate = null;
+
+	tempRentdate = sdf2.parse(rentdateStr);
+
+	String rentdate = sdf.format(tempRentdate);
+
+	Calendar curCal = Calendar.getInstance();
+	Calendar diffCal = Calendar.getInstance();
+
+	curCal.setTime(curDate);
+	diffCal.setTime(tempRentdate);
+
+	int diff = curCal.get(Calendar.DAY_OF_YEAR) - diffCal.get(Calendar.DAY_OF_YEAR);
+
+	System.out.println(curCal.get(Calendar.DAY_OF_YEAR));
+	System.out.println(diffCal.get(Calendar.DAY_OF_YEAR));
+
 %>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -32,49 +58,40 @@
 	<header></header>
 	<section class="main">
 		<section class="row">
-			<div class="col-md-6 col-md-offset-3">
-				<h2 class="h2">대여 정보 업데이트</h2>
-				<form action="<%= contextPath %>/rent/rentModify.do" method="post" class="form-horizontal" name="rentModifyForm">
+			<div class="col-md-10 col-md-offset-1">
+				<h2 class="h2">대여 상품 반납</h2>
+				<form method="post" class="form-inline text-center" name="rentInfoForm">
 					<ul class="list-group">
 						<li class="list-group-item form-group">
 							<label for="getRmId">대여 ID : </label>
-							<input type="text" id="getRmId" name="getRmId" class="form-control" value="<%= Tools.customToEmptyBlank(details.getmId(), "") %>" readonly/>
+							<input type="text" id="infoRmId" name="infoRmId" class="form-control" value="<%= Tools.customToEmptyBlank(details.getmId(), "") %>" readonly/>
 						</li>
 						<li class="list-group-item form-group">
 							<label for="getRrentdate">대여 일자 : </label>
-							<input type="text" id="getRrentdate" name="getRrentdate" class="form-control" value="<%= Tools.customToEmptyBlank(details.getrRentdate(), "") %>" readonly/>
+							<input type="text" id="infoRrentdate" name="infoRrentdate" class="form-control" value="<%= Tools.customToEmptyBlank(details.getrRentdate(), "") %>" readonly/>
 						</li>
 						<li class="list-group-item form-group">
 							<label for="getRstId">대여 상품 : </label>
-							<input type="text" id="getRstId" name="getRstId" class="form-control" value="<%= Tools.customToEmptyBlank(details.getStId(), "")%>" readonly/>
+							<input type="text" id="infoRstId" name="infoRstId" class="form-control" value="<%= Tools.customToEmptyBlank(details.getStId(), "")%>" readonly/>
 						</li>
-						<li class="list-group-item form-group">
-							<label for="getRrentPeriod">대여 기간 : </label>
-							<input type="text" id="getRrentPeriod" name="getRrentPeriod" class="form-control" value="<%= Tools.customToEmptyBlank(details.getrRentperiod(), "0") %>" readonly />
-						</li>
-						<li class="list-group-item form-group">
-							<label for="getRcharge">대여료 : </label>
-							<input type="text" id="getRcharge" name="getRcharge" class="form-control" value="<%= Tools.customToEmptyBlank(details.getrCharge(), "0") %>" readonly />
-						</li>
+					</ul>
+				</form>
+				<form action="<%= contextPath %>/rent/rentModify.do" method="post" class="form-horizontal" name="rentModifyForm">
+					<ul class="list-group">
 						<li class="list-group-item form-group">
 							<label for="getRreturndate">반납 일자 : </label>
-							<input type="number" id="getRreturndate" name="getRreturndate" class="form-control" min="0" value="<%= Tools.customToEmptyBlank(details.getrReturndate(), "") %>" />
-						</li>
-						<li class="list-group-item form-group">
-							<label for="getRreturnStatus">반납 확인 : </label>
-							<input type="text" id="getRreturnStatus" name="getRreturnStatus" class="form-control" value="<%= Tools.customToEmptyBlank(details.getrReturnStatus(), "") %>" />
+							<input type="date" id="getRreturndate" name="getRreturndate" class="form-control" value="<%= returndate %>" />
 						</li>
 						<li class="list-group-item form-group">
 							<label for="getRarrears">연체료 : </label>
-							<input type="number" id="getRarrears" name="getRarrears" class="form-control" value="<%= Tools.customToEmptyBlank(details.getrArrears(), "") %>" />
-						</li>
-						<li class="list-group-item form-group">
-							<label for="getRarrearsClear">연체료 납부일 : </label>
-							<input type="number" id="getRarrearsClear" name="getRarrearsClear" class="form-control" min="0" value="<%= Tools.customToEmptyBlank(details.getrArrearsClear(), "")%>"  />
+							<input type="number" id="getRarrears" name="getRarrears" class="form-control" value="0" />
 						</li>
 					</ul>
 					<div class="form-group">
 						<input type="hidden" id="getMPhone" name="getMPhone" />
+						<input type="hidden" id="getRmId" name="getRmId" value="<%= Tools.customToEmptyBlank(details.getmId(), "") %>">
+						<input type="hidden" id="getRrentdate" name="getRrentdate" value="<%= Tools.customToEmptyBlank(details.getrRentdate(), "") %>">
+						<input type="hidden" id="getRstId" name="getRstId" value="<%= Tools.customToEmptyBlank(details.getStId(), "")%>">
 						<input type="submit" class="btn btn-info" value="수정" />
 					</div>
 				</form>
@@ -94,7 +111,22 @@
 
 <script>
 	$(function(){
+	    returndateCalForSetArrears();
 
+	    // 연체료 계산 (1일 200원, 최대 12일(2주))
+		function returndateCalForSetArrears(){
+		    var rentdate = new Date('<%= rentdate %>');
+		    var curDate = new Date('<%= returndate %>');
+
+			var limitOfReturn = (rentdate.getDate() + <%= details.getrRentperiod() %>);
+			rentdate.setDate(limitOfReturn);
+
+			if(curDate > rentdate){
+				var afterDays = Number(<%= diff %>);
+				var setArrears = afterDays >= 12 ? (200 * 12) : (200 * afterDays);
+				$('#getRarrears').val(setArrears);
+			}
+		}
 	});
 </script>
 </html>

@@ -28,8 +28,8 @@
 				<h2 class="h2">대여 정보</h2>
 				<ul class="list-group">
                     <li class="list-group-item form-group">
-                        <label for="getRmId">대여 ID : </label>
-                        <input type="text" id="getRmId" name="getRmId" class="form-control" value="<%= Tools.customToEmptyBlank(details.getmId(), "") %>" readonly/>
+                        <label for="getRmId">대여 회원 : </label>
+                        <input type="text" id="getRmId" name="getRmId" class="form-control" value="<%= Tools.customToEmptyBlank(details.getmId(), "") %> (<%= Tools.customToEmptyBlank(details.getmName(), "")%>)" readonly/>
                     </li>
 					<li class="list-group-item form-group">
 						<label for="getRrentdate">대여 일자 : </label>
@@ -37,7 +37,7 @@
 					</li>
 					<li class="list-group-item form-group">
 						<label for="getRstId">대여 상품 : </label>
-						<input type="text" id="getRstId" name="getRstId" class="form-control" value="<%= Tools.customToEmptyBlank(details.getStId(), "")%>" readonly/>
+						<input type="text" id="getRstId" name="getRstId" class="form-control" value="<%= Tools.customToEmptyBlank(details.getStId(), "")%> (<%= Tools.customToEmptyBlank(details.getpName(), "")%>)" readonly/>
 					</li>
 					<li class="list-group-item form-group">
 						<label for="getRrentPeriod">대여 기간 : </label>
@@ -67,7 +67,6 @@
 
                 <div class="btn-group">
                     <a href="<%= contextPath %>/rent/rentList.do" class="btn btn-default">목록으로</a>
-                    <a href="<%= contextPath %>/rent/rentModifyView.do?mId=<%= details.getmId() %>&rentdate=<%= details.getrRentdate()%>&stId=<%= details.getStId() %>" id="updateRentInfo" class="btn btn-info">정보 업데이트</a>
                     <a href="<%= contextPath %>/rent/rentDel.do?mId=<%= details.getmId() %>&rentdate=<%= details.getrRentdate()%>&stId=<%= details.getStId() %>" class="btn btn-warning">대여 정보 삭제</a>
                 </div>
 
@@ -83,12 +82,14 @@
 	$(function(){
 	    returnChk();
 
+		// 반납 여부 확인
 	    function returnChk(){
 	        var status = $('#getRreturnStatus').val();
             if(status === 'Y'){
                 $('#updateRentInfo').attr('disabled', 'true').bind('click', false);
             }
         }
+
 	});
 </script>
 </html>

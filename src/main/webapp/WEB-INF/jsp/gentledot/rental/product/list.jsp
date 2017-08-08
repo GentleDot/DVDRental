@@ -24,7 +24,11 @@
 </head>
 <body>
 <div id="container">
-	<header></header>
+	<header>
+		<jsp:include page ="/WEB-INF/jsp/gentledot/inc/menu_header.jsp">
+			<jsp:param name="curPage" value="product" />
+		</jsp:include>
+	</header>
 	<section class="main">
 		<section class="row">
 			<div class="col-md-12">

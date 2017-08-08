@@ -116,5 +116,13 @@ public class MemberServiceImpl implements MemberService{
 	public int delMember(MemberVO vo){
 		return memberDao.delMember(vo);
 	}
+
+	public int decreaseLimit(MemberVO vo){
+		return memberDao.decreaseLimit(vo);
+	}
+
+	public int increaseLimit(MemberVO vo){
+		return memberDao.increaseLimit(vo);
+	}
 	
 }

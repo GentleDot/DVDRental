@@ -1,8 +1,10 @@
 package net.gentledot.rental.storage.web;
 
 import net.gentledot.rental.product.service.ProductService;
+import net.gentledot.rental.sales.service.SalesService;
 import net.gentledot.rental.storage.service.StorageService;
 import net.gentledot.rental.vo.ProductVO;
+import net.gentledot.rental.vo.SalesVO;
 import net.gentledot.rental.vo.StorageVO;
 import net.gentledot.utils.Pagination;
 import net.gentledot.utils.Tools;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +33,9 @@ public class StorageController {
 
 	@Resource(name="productService")
 	private ProductService productService;
+
+	@Resource(name="salesService")
+	private SalesService salesService;
 
 	
 	@RequestMapping("/storage/storageList.do")
@@ -106,6 +114,10 @@ public class StorageController {
 
 	@RequestMapping("/storage/storageModify.do")
 	public String updateStorageInfo(@RequestParam HashMap<String, String> req, ModelMap model){
+		
+		LOGGER.debug("==================");
+		LOGGER.debug(" 처리 확인! ");
+		LOGGER.debug("==================");
 
 		String stId = req.get("getStId");
 		String stGetdate = Tools.customToEmptyBlank(req.get("getStGetdate"), "99999999");
@@ -114,6 +126,31 @@ public class StorageController {
 		String stWastedate = Tools.customToEmptyBlank(req.get("getStWastedate"), "");
 		String stWastecost = Tools.customToEmptyBlank(req.get("getStWastecost"), "");
 		String stWasteReason = Tools.customToEmptyBlank(req.get("getStWasteReason"), "");
+
+		LOGGER.debug("==================");
+		LOGGER.debug(" 입력 받은 상품 상태 : " +  req.get("getStStatus"));
+		LOGGER.debug(" 상품 상태 : " +  stStatus);
+		LOGGER.debug("==================");
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
+
+		Date tempWastedate = null;
+		if (!(stWastedate.equals(""))){
+			try {
+				tempWastedate = sdf.parse(stWastedate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+
+		stWastedate = stWastedate.equals("") ? stWastedate : sdf2.format(tempWastedate);
+
+		if(stStatus.equals("파손") || stStatus.equals("분실")) {
+			if(stWastedate.equals("") || stWastecost.equals("")){
+				return "redirect:/storage/storageModify.do?stId=" + stId;
+			}
+		}
 
 		StorageVO updateVO = new StorageVO();
 		updateVO.setStId(stId);
@@ -125,6 +162,19 @@ public class StorageController {
 		updateVO.setStWasteReason(stWasteReason);
 		
 		int resultStatus = storageService.updateStorage(updateVO);
+
+		// 파손 또는 분실 상태인 경우 매출 목록에 폐기비용 추가
+		if(stStatus.equals("파손") || stStatus.equals("분실")){
+			SalesVO salesData = new SalesVO();
+			salesData.setsDate(stWastedate);
+			salesData.setStId(stId);
+			salesData.setsWasteCost(stWastecost);
+			int result = salesService.addPutWastecost(salesData);
+			
+			LOGGER.debug("==================");
+			LOGGER.debug(" 매출 데이터 입력 확인 : " +  result);
+			LOGGER.debug("==================");
+		}
 		
 		return "redirect:/storage/storageList.do";
 	}

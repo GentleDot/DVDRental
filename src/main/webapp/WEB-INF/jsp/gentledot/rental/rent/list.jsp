@@ -24,7 +24,11 @@
 </head>
 <body>
 <div id="container">
-	<header></header>
+	<header>
+		<jsp:include page ="/WEB-INF/jsp/gentledot/inc/menu_header.jsp">
+			<jsp:param name="curPage" value="rent" />
+		</jsp:include>
+	</header>
 	<section class="main">
 		<section class="row">
 			<div class="col-md-8 col-md-offset-2">
@@ -50,18 +54,21 @@
 		</section>
 		<section class="row">
 			<div class="col-md-8 col-md-offset-2">
+				<div class="text-right">
+					<a href="<%= contextPath %>/member/memberList.do" class="btn btn-default">회원 목록</a>
+				</div>
 				<table class="table table-bordered">
 					<caption class="sr-only">DVD 대여점 대여 목록</caption>
 					<thead>
-					<tr>
-						<th>회원 ID</th>
-						<th>대여 일자</th>
-						<th>대여 제품</th>
-						<th>대여 기간</th>
-						<th>대여료</th>
-						<th>반납 일자</th>
-						<th>반납 확인</th>
-					</tr>
+						<tr>
+							<th>회원</th>
+							<th>대여 일자</th>
+							<th>대여 상품</th>
+							<th>대여 기간</th>
+							<th>대여료</th>
+							<th>반납 처리</th>
+							<th>반납 일자</th>
+						</tr>
 					</thead>
 					<tfoot>
 
@@ -81,24 +88,35 @@
 					<%
 						}
 					%>
-
 							<td>
-								<a href="<%= contextPath %>/rent/rentInfo.do?mId=<%= rent.getmId() %>&rentdate=<%= rent.getrRentdate()%>&stId=<%= rent.getStId() %>"><%=Tools.customToEmptyBlank(rent.getmId(), "")%></a>
-							</td>
+								<a href="<%= contextPath %>/rent/rentInfo.do?mId=<%= rent.getmId() %>&rentdate=<%= rent.getrRentdate()%>&stId=<%= rent.getStId() %>"><%=Tools.customToEmptyBlank(rent.getmId(), "")%><span>(<%= Tools.customToEmptyBlank(rent.getmName(), "") %>)</span></a>
+						</td>
 							<td>
 								<a href="<%= contextPath %>/rent/rentInfo.do?mId=<%= rent.getmId() %>&rentdate=<%= rent.getrRentdate()%>&stId=<%= rent.getStId() %>"><%=Tools.customToEmptyBlank(rent.getrRentdate(), "")%></a>
 							</td>
 							<td>
-								<a href="<%= contextPath %>/rent/rentInfo.do?mId=<%= rent.getmId() %>&rentdate=<%= rent.getrRentdate()%>&stId=<%= rent.getStId() %>"><%=Tools.customToEmptyBlank(rent.getStId(), "")%></a>
+								<a href="<%= contextPath %>/rent/rentInfo.do?mId=<%= rent.getmId() %>&rentdate=<%= rent.getrRentdate()%>&stId=<%= rent.getStId() %>"><%=Tools.customToEmptyBlank(rent.getStId(), "")%><span>(<%= rent.getpName() %>)</span></a>
 							</td>
 							<td><%=Tools.customToEmptyBlank(rent.getrRentperiod(), "")%>
 							</td>
 							<td><%=Tools.customToEmptyBlank(rent.getrCharge(), "")%>
 							</td>
-							<td><%=Tools.customToEmptyBlank(rent.getrReturndate(), "")%>
-							</td>
 							<td>
-								<%=Tools.customToEmptyBlank(rent.getrReturnStatus(), "")%>
+							<%
+								if(rent.getrReturnStatus() != null){
+									if(rent.getrReturnStatus().equals("Y")){
+							%>
+								<a href="#" class="btn btn-info" disabled="disabled">반납완료</a>
+							<%
+									}
+								}else{
+							%>
+								<a href="<%= contextPath %>/rent/rentModifyView.do?mId=<%= rent.getmId() %>&rentdate=<%= rent.getrRentdate()%>&stId=<%= rent.getStId() %>" class="btn btn-warning">반 납</a>
+							<%
+								}
+							%>
+							</td>
+							<td><%=Tools.customToEmptyBlank(rent.getrReturndate(), "")%>
 							</td>
 						</tr>
 					<% }%>

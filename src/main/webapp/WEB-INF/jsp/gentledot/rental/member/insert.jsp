@@ -149,7 +149,7 @@
             emailChk();
 			buildTelNum();
 
-            $('form[name="addMemberForm"]').submit();
+            $('form[name="addMemberForm"]').submit();0.
 		}
 
         function emailChk(){
@@ -157,7 +157,9 @@
             var checkEMail = $('#chkEmail').val();
 
             if (inputEMail != checkEMail){
-                alert('이메일이 올바르지 않습니다. 다시 입력해주세요.');
+                alert('이메일이 올바르지 않습니다. 다시 입력해주세요.');21]=[
+
+                    4.
                 $('#chkEmail').val('');
                 $('#inputMMail').val('').focus();
                 return;

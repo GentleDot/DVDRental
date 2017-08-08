@@ -35,6 +35,10 @@ public class StorageDAO extends EgovAbstractMapper {
         return update("updateStorage", vo);
     }
 
+    public int changeStatusToRent(StorageVO vo){
+        return update("changeStatusToRent", vo);
+    }
+
     /*public int delStorage(StorageVO vo){
         return delete("delStorage", vo);
     }*/

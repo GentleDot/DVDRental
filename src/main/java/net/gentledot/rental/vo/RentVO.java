@@ -14,14 +14,7 @@ public class RentVO extends PaginationVO {
     private String rArrears;
     private String rArrearsClear;
     private String pName;
-
-    public String getpName() {
-        return pName;
-    }
-
-    public void setpName(String pName) {
-        this.pName = pName;
-    }
+    private String mName;
 
     public String getmId() {
         return mId;
@@ -93,5 +86,21 @@ public class RentVO extends PaginationVO {
 
     public void setrArrearsClear(String rArrearsClear) {
         this.rArrearsClear = rArrearsClear;
+    }
+
+    public String getpName() {
+        return pName;
+    }
+
+    public void setpName(String pName) {
+        this.pName = pName;
+    }
+
+    public String getmName() {
+        return mName;
+    }
+
+    public void setmName(String mName) {
+        this.mName = mName;
     }
 }

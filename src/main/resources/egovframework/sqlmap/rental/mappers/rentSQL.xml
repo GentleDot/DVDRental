@@ -12,22 +12,23 @@
 		<result property="rReturnStatus"		column="R_RETURNSTATUS" />
 		<result property="rArrears"     		column="R_ARREARS" />
 		<result property="rArrearsClear"		column="R_ARREARS_CLEAR" />
-		<result property="pName"				column="R_ARREARS_CLEAR" />
+		<result property="pName"				column="P_NAME" />
+		<result property="mName"				column="M_NAME" />
 	</resultMap>
 
 	<sql id="rentSql">
 		SELECT
-		M_ID
-		, R_RENTDATE
-		, ST_ID
-		, R_RENTPERIOD
-		, R_CHARGE
-		, R_RETURNDATE
-		, R_RETURNSTATUS
-		, R_ARREARS
-		, R_ARREARS_CLEAR
+			M_ID
+			, R_RENTDATE
+			, ST_ID
+			, R_RENTPERIOD
+			, R_CHARGE
+			, R_RETURNDATE
+			, R_RETURNSTATUS
+			, R_ARREARS
+			, R_ARREARS_CLEAR
 		FROM
-		RENT
+			RENT
 	</sql>
 
 	<select id="selectRentListByMemberID" parameterType="rentVO" resultMap="rentMap">
@@ -36,11 +37,11 @@
 				SELECT ROWNUM rn, a.*
 					FROM (
 						SELECT
-							r.M_ID, r.R_RENTDATE, r.ST_ID, r.R_RENTPERIOD, r.R_CHARGE, r.R_RETURNDATE, r.R_RETURNSTATUS, r.R_ARREARS, r.R_ARREARS_CLEAR, p.P_NAME
+							r.M_ID, r.R_RENTDATE, r.ST_ID, r.R_RENTPERIOD, r.R_CHARGE, r.R_RETURNDATE, r.R_RETURNSTATUS, r.R_ARREARS, r.R_ARREARS_CLEAR, p.P_NAME, m.M_NAME
 							FROM
-							RENT r, STORAGE s, PRODUCT p
-							WHERE r.M_ID LIKE '%'||#{mId}||'%' and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID
-							ORDER BY r.R_RENTDATE ASC
+							RENT r, STORAGE s, PRODUCT p, MEMBER m
+							WHERE r.M_ID LIKE '%'||#{mId}||'%' and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID and r.M_ID = m.M_ID
+							ORDER BY r.R_RENTDATE ASC, r.M_ID ASC
 					) a
 			)
 			WHERE
@@ -55,11 +56,11 @@
 		SELECT ROWNUM rn, a.*
 		FROM (
 		SELECT
-		r.M_ID, r.R_RENTDATE, r.ST_ID, r.R_RENTPERIOD, r.R_CHARGE, r.R_RETURNDATE, r.R_RETURNSTATUS, r.R_ARREARS, r.R_ARREARS_CLEAR, p.P_NAME
+		r.M_ID, r.R_RENTDATE, r.ST_ID, r.R_RENTPERIOD, r.R_CHARGE, r.R_RETURNDATE, r.R_RETURNSTATUS, r.R_ARREARS, r.R_ARREARS_CLEAR, p.P_NAME, m.M_NAME
 		FROM
-		RENT r, STORAGE s, PRODUCT p
-		WHERE r.R_RENTDATE LIKE '%'||#{rRentdate}||'%' and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID
-		ORDER BY r.R_RENTDATE ASC
+		RENT r, STORAGE s, PRODUCT p, MEMBER m
+		WHERE r.R_RENTDATE LIKE '%'||#{rRentdate}||'%' and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID and r.M_ID = m.M_ID
+		ORDER BY r.R_RENTDATE ASC, r.M_ID ASC
 		) a
 		)
 		WHERE
@@ -73,11 +74,11 @@
 		SELECT ROWNUM rn, a.*
 		FROM (
 		SELECT
-		r.M_ID, r.R_RENTDATE, r.ST_ID, r.R_RENTPERIOD, r.R_CHARGE, r.R_RETURNDATE, r.R_RETURNSTATUS, r.R_ARREARS, r.R_ARREARS_CLEAR, p.P_NAME
+		r.M_ID, r.R_RENTDATE, r.ST_ID, r.R_RENTPERIOD, r.R_CHARGE, r.R_RETURNDATE, r.R_RETURNSTATUS, r.R_ARREARS, r.R_ARREARS_CLEAR, p.P_NAME, m.M_NAME
 		FROM
-		RENT r, STORAGE s, PRODUCT p
-		WHERE r.ST_ID LIKE '%'||#{stId}||'%' and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID
-		ORDER BY r.R_RENTDATE ASC
+		RENT r, STORAGE s, PRODUCT p, MEMBER m
+		WHERE r.ST_ID LIKE '%'||#{stId}||'%' and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID and r.M_ID = m.M_ID
+		ORDER BY r.R_RENTDATE ASC, r.M_ID ASC
 		) a
 		)
 		WHERE
@@ -95,20 +96,20 @@
 
 	<select id="selectOneOfRent" parameterType="rentVO" resultMap="rentMap">
 		SELECT
-		r.M_ID, r.R_RENTDATE, r.ST_ID, r.R_RENTPERIOD, r.R_CHARGE, r.R_RETURNDATE, r.R_RETURNSTATUS, r.R_ARREARS, r.R_ARREARS_CLEAR, p.P_NAME
+		r.M_ID, r.R_RENTDATE, r.ST_ID, r.R_RENTPERIOD, r.R_CHARGE, r.R_RETURNDATE, r.R_RETURNSTATUS, r.R_ARREARS, r.R_ARREARS_CLEAR, p.P_NAME, m.M_NAME
 		FROM
-		RENT r, STORAGE s, PRODUCT p
+		RENT r, STORAGE s, PRODUCT p, MEMBER m
 		WHERE
-		r.M_ID = #{mId} and r.R_RENTDATE = #{rRentdate} and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID
+		r.M_ID = #{mId} and r.R_RENTDATE = #{rRentdate} and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID and r.M_ID = m.M_ID
 	</select>
 
 	<select id="checkRentDetail" parameterType="rentVO" resultMap="rentMap">
 		SELECT
-		r.M_ID, r.R_RENTDATE, r.ST_ID, r.R_RENTPERIOD, r.R_CHARGE, r.R_RETURNDATE, r.R_RETURNSTATUS, r.R_ARREARS, r.R_ARREARS_CLEAR, p.P_NAME
+		r.M_ID, r.R_RENTDATE, r.ST_ID, r.R_RENTPERIOD, r.R_CHARGE, r.R_RETURNDATE, r.R_RETURNSTATUS, r.R_ARREARS, r.R_ARREARS_CLEAR, p.P_NAME, m.M_NAME
 		FROM
-		RENT r, STORAGE s, PRODUCT p
+		RENT r, STORAGE s, PRODUCT p, MEMBER m
 		WHERE
-		r.M_ID = #{mId} and r.R_RENTDATE = #{rRentdate} and r.ST_ID = #{stId} and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID
+		r.M_ID = #{mId} and r.R_RENTDATE = #{rRentdate} and r.ST_ID = #{stId} and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID and r.M_ID = m.M_ID
 	</select>
 
 	<insert id="addRent" parameterType="rentVO">

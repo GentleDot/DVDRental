@@ -13,6 +13,8 @@
 
     String memberStatus = Tools.customToEmptyBlank(oneOfMember.getmStatus(), "").equals("M") ? "회원" : "탈퇴";
 
+    Date date = new Date();
+
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
 	Date tempBirth= null;
@@ -26,6 +28,7 @@
 	}
 	String mBirth = sdf.format(tempBirth);
 	String mJoindate = sdf.format(tempJoindate);
+	String curDate = sdf2.format(date);
 
 	String mPhone = oneOfMember.getmPhone();
 	String tel1 = mPhone.substring(0, 3);
@@ -133,11 +136,11 @@
 							<input type="email" id="getMMail" name="getMMail" class="form-control"
 								   value="<%= Tools.customToEmptyBlank(oneOfMember.getmMail(), "") %>"/>
 						</li>
-						<li class="list-group-item form-group">
+						<%--<li class="list-group-item form-group">
 							<label for="chkMail">이메일 확인: </label>
 							<input type="email" id="chkMail" name="chkMail" class="form-control"
 								   placeholder="<%= Tools.customToEmptyBlank(oneOfMember.getmMail(), "") %>"/>
-						</li>
+						</li>--%>
 						<li class="list-group-item form-group">
 							<label for="getMLimit">대여제한 : </label>
 							<input type="number" id="getMLimit" name="getMLimit" class="form-control"
@@ -182,6 +185,8 @@
 
 	    $('form[name="memberModifyForm"] input[type="submit"]').click(buildTelNum);
 
+	    $('button[name="outMemberBtn"]').click(memberOut);
+
 
 		function tel1Selector(){
 		    $('#phoneNum > option[value="<%= tel1 %>"]').attr("selected", "true");
@@ -195,6 +200,16 @@
 		    var rebuildTelNum = tel1 + tel2 + tel3;
 
 		    $('#getMPhone').val(rebuildTelNum);
+		}
+
+		function memberOut(){
+		    if(confirm('경고 : 회원 탈퇴 처리 후에는 다시 변경할 수 없습니다.')){
+				$('#getMStatus').val('탈퇴');
+				$('#getMOutdate').val(<%= curDate %>);
+				alert('수정 버튼을 눌러야 탈퇴가 반영됩니다. ');
+			}else{
+
+			}
 		}
 	});
 </script>

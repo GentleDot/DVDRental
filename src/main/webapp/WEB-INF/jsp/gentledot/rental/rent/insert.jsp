@@ -69,7 +69,7 @@
 						</li>
 						<li class="list-group-item form-group">
 							<label for="inputRcharge">대여료 : </label>
-							<input type="number" id="inputRcharge" name="inputRcharge" class="form-control" min="0" />
+							<input type="number" id="inputRcharge" name="inputRcharge" class="form-control" min="0" readonly />
 						</li>
 					</ul>
 					<div class="form-group">
@@ -84,4 +84,17 @@
 </body>
 <script src="<%=contextPath%>/webjars/jquery/3.2.1/jquery.min.js"></script>
 <script src="<%=contextPath%>/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+
+<script>
+	$(function(){
+		$('#inputRrentPeriod').bind('blur', calArrears);
+
+	    // 대여료 계산
+        function calArrears(){
+			var period = Number($('#inputRrentPeriod').val());
+			var totalArrears = 500 * period;
+			$('#inputRcharge').val(totalArrears);
+        }
+	});
+</script>
 </html>

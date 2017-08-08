@@ -72,8 +72,22 @@
 	$(function(){
 	    gradeSelector();
 
+	    $('#getPPrice').bind('blur', chkPrice);
+
+	    // 현재 등급 정보가 select에 반영되도록 설정
 		function gradeSelector(){
 		    $('#getPGrade > option[value="<%= Tools.customToEmptyBlank(oneOfProduct.getpGrade(), "ALL")%>"').attr("selected", "true");
+		}
+
+		// 가격이 0 미만으로는 입력되지 못하도록 설정
+		function chkPrice(){
+		    var inputPrice = $('#getPPrice').val();
+		    var regExp = /^\d+$/g;
+		    var regResult = regExp.test(inputPrice);
+		    if(Number(inputPrice) < 0 || !(regResult)){
+		        alert('올바른 가격을 입력해주세요.');
+		        $('#getPPrice').val("100").focus();
+			}
 		}
 	});
 </script>

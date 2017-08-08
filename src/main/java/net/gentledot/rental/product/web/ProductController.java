@@ -1,7 +1,10 @@
 package net.gentledot.rental.product.web;
 
+import net.gentledot.ids.service.IdsService;
 import net.gentledot.rental.product.service.ProductService;
+import net.gentledot.rental.sales.service.SalesService;
 import net.gentledot.rental.vo.ProductVO;
+import net.gentledot.rental.vo.SalesVO;
 import net.gentledot.utils.Pagination;
 import net.gentledot.utils.Tools;
 import org.apache.log4j.Logger;
@@ -26,6 +29,12 @@ public class ProductController {
 	
 	@Resource(name="productService")
 	private ProductService productService;
+
+	@Resource(name="salesService")
+	private SalesService salesService;
+
+	@Resource(name="idsService")
+	private IdsService idsService;
 	
 	@RequestMapping("/product/productList.do")
 	public String selectProductList(@RequestParam HashMap<String, String> req, ModelMap model){
@@ -75,13 +84,33 @@ public class ProductController {
 		String pPrice = Tools.customToEmptyBlank(req.get("inputPPrice"), "0");
 		String pGrade = Tools.customToEmptyBlank(req.get("inputPGrade"), "all");
 
+		if(pName.equals("") || pPrice.equals("")){
+			return "redirect:/product/addProductView.do";
+		}
 
-		ProductVO insertVO = new ProductVO();
+		/*id를 idsService에서 받아온 뒤 그 번호를 양식에 맞게 변형하여 VO로 전달*/
+		String tableName = "product";
+		String pId = idsService.getNextId(tableName);
+
+
+		ProductVO insertVO = new ProductVO();		insertVO.setpId(pId);
 		insertVO.setpName(pName);
 		insertVO.setpPrice(pPrice);
 		insertVO.setpGrade(pGrade);
 
 		int resultStatus = productService.addProduct(insertVO);
+
+		// 매출 목록에 구입비 추가
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+		String curDate = sdf.format(date);
+
+		SalesVO salesData = new SalesVO();
+		salesData.setsDate(curDate);
+		salesData.setpId(pId);
+		salesData.setsPrice(pPrice);
+		salesService.addPutPrice(salesData);
 		
 		return "redirect:/product/productList.do";
 	}

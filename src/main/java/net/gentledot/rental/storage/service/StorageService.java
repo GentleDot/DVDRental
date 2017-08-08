@@ -14,4 +14,5 @@ public interface StorageService {
     public int addStorage(StorageVO vo);
     public int updateStorage(StorageVO vo);
     public List<StorageVO> totalStorageItems();
+    public int changeStatusToRent(StorageVO vo);
 }

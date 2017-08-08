@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SALES">
+
+    	<resultMap id="salesMap" type="salesVO">
+    	    <result property="sDate" 		column="S_DATE" />
+    	    <result property="sCharge" 		column="S_CHARGE" />
+    	    <result property="sArrears" 	column="S_ARREARS" />
+    	    <result property="sPrice" 		column="S_PRICE" />
+    	    <result property="sWasteCost" 	column="S_WASTECOST" />
+			<result property="mId" 			column="M_ID" />
+			<result property="stId" 		column="ST_ID" />
+			<result property="pId" 		column="P_ID" />
+    	</resultMap>
+
+    	<sql id="salesSql">
+			SELECT
+				S_DATE
+				, S_CHARGE
+				, S_ARREARS
+				, S_PRICE
+				, S_WASTECOST
+			FROM
+				SALES
+		</sql>
+		
+		<select id="selectSalesList" parameterType="salesVO" resultMap="salesMap">
+			SELECT *
+				FROM (
+					SELECT ROWNUM rn, a.*
+						FROM (
+							SELECT
+        sa.S_DATE, sa.M_ID, sa.ST_ID, sa.P_ID, sa.S_CHARGE, sa.S_ARREARS, sa.S_PRICE, S_WASTECOST
+								FROM
+									SALES sa
+								WHERE
+									S_DATE LIKE #{sDate}||'%'
+								ORDER BY sa.S_DATE, sa.M_ID, sa.ST_ID
+						) a
+				)
+			WHERE
+				ROWNUM <![CDATA[<=]]> #{pageSize}
+					AND rn <![CDATA[>]]> (#{pageNo} - 1) * #{pageSize}
+					
+    	</select>
+
+		<select id="totalCountOfSalesList" parameterType="salesVO" resultType="Integer">
+			SELECT COUNT(0) TOTALCNT
+			FROM(
+			<include refid="salesSql" />
+			)
+		</select>
+
+		<insert id="addGetCharge" parameterType="salesVO">
+			INSERT INTO SALES(S_DATE, M_ID, ST_ID, S_CHARGE)
+				VALUES (#{sDate, jdbcType=VARCHAR}, #{mId, jdbcType=VARCHAR}, #{stId, jdbcType=VARCHAR}, #{sCharge, jdbcType=INTEGER})
+		</insert>
+
+		<insert id="addGetArrears" parameterType="salesVO">
+			INSERT INTO SALES(S_DATE, M_ID, ST_ID, S_ARREARS)
+			VALUES (#{sDate, jdbcType=VARCHAR}, #{mId, jdbcType=VARCHAR}, #{stId, jdbcType=VARCHAR}, #{sArrears, jdbcType=INTEGER})
+		</insert>
+
+    	<insert id="addPutPrice" parameterType="salesVO">
+			INSERT INTO SALES(S_DATE, P_ID, S_PRICE)
+			VALUES (#{sDate, jdbcType=VARCHAR}, #{pId, jdbcType=VARCHAR}, #{sPrice, jdbcType=INTEGER})
+		</insert>
+
+    	<insert id="addPutWastecost" parameterType="salesVO">
+			INSERT INTO SALES(S_DATE, ST_ID, P_ID, S_WASTECOST)
+			VALUES (#{sDate, jdbcType=VARCHAR}, #{stId, jdbcType=VARCHAR}, #{pId, jdbcType=VARCHAR}, #{sWasteCost, jdbcType=INTEGER})
+		</insert>
+
+</mapper>

@@ -80,13 +80,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public int addProduct(ProductVO vo){
-
-		/*id를 idsService에서 받아온 뒤 그 번호를 양식에 맞게 변형하여 VO로 전달*/
-        String tableName = "product";
-		String pId = idsService.getNextId(tableName);
-
-        vo.setpId(pId);
-
         return dao.addProduct(vo);
     }
 

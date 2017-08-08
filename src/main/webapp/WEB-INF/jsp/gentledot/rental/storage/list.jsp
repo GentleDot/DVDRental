@@ -25,7 +25,11 @@
 </head>
 <body>
 <div id="container">
-	<header></header>
+	<header>
+		<jsp:include page ="/WEB-INF/jsp/gentledot/inc/menu_header.jsp">
+			<jsp:param name="curPage" value="storage" />
+		</jsp:include>
+	</header>
 	<section class="main">
 		<section class="row">
 			<div class="col-md-12">
@@ -53,12 +57,12 @@
 				<table class="table table-bordered">
 					<caption class="sr-only">DVD 대여점 재고 목록</caption>
 					<thead>
-					<tr>
-						<th>ID</th>
-						<th>입고일</th>
-						<th>제품명</th>
-						<th>상태</th>
-					</tr>
+						<tr>
+							<th>ID</th>
+							<th>입고일</th>
+							<th>제품명</th>
+							<th>상태</th>
+						</tr>
 					</thead>
 					<tfoot>
 

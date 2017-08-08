@@ -80,4 +80,8 @@ public class StorageServiceImpl implements StorageService{
         return dao.totalStorageItems();
     }
 
+    public int changeStatusToRent(StorageVO vo){
+        return dao.changeStatusToRent(vo);
+    }
+
 }

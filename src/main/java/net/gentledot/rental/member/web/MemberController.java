@@ -53,7 +53,7 @@ public class MemberController {
 			resultMap = memberService.getMemberListByName(keyword, PAGE_SIZE, pageNo, pageScope);
 			break;
 		default:
-			resultMap = resultMap = memberService.getMemberList(keyword, PAGE_SIZE, pageNo, pageScope);
+			resultMap = memberService.getMemberList(keyword, PAGE_SIZE, pageNo, pageScope);
 			break;
 		}
 		
@@ -174,19 +174,7 @@ public class MemberController {
 		String mJoindate = sdf2.format(tempJoindate);
 		
 		
-		String mOutdate = "";
-		if (!mOutdateStr.equals("")){
-			Date tempOutdate = null;
-			try {
-				tempOutdate = sdf.parse(mOutdateStr);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			mOutdate = sdf2.format(tempOutdate);
-		}else{
-			mOutdate = mOutdateStr;
-		}
+		String mOutdate = mOutdateStr;
 		
 		String mStatus =  mStatusStr.equals("회원") ? "M" : "O";
 		

@@ -1,6 +1,5 @@
-<%@ page import="net.gentledot.rental.vo.ProductVO" %>
-<%@ page import="net.gentledot.utils.Tools" %>
 <%@ page import="net.gentledot.rental.vo.StorageVO" %>
+<%@ page import="net.gentledot.utils.Tools" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 		 pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -47,8 +46,8 @@
 						<input type="text" id="getPname" name="getPname" class="form-control" value="<%= Tools.customToEmptyBlank(oneOfStorage.getpName(), "") %> [ID : <%= Tools.customToEmptyBlank(oneOfStorage.getpId(), "1") %>]" readonly/>
 					</li>
 					<li class="list-group-item form-group">
-						<label for="getStstatus">재고상태 : </label>
-						<input type="text" id="getStstatus" name="getStstatus" class="form-control" value="<%= Tools.customToEmptyBlank(oneOfStorage.getStStatus(), "") %>" readonly />
+						<label for="getStStatus">재고상태 : </label>
+						<input type="text" id="getStStatus" name="getStStatus" class="form-control" value="<%= Tools.customToEmptyBlank(oneOfStorage.getStStatus(), "") %>" readonly />
 					</li>
 					<li class="list-group-item form-group">
 						<label for="getStWastedate">폐기일 : </label>
@@ -66,7 +65,7 @@
 
                 <div class="btn-group">
                     <a href="<%= contextPath %>/storage/storageList.do" class="btn btn-default">목록으로</a>
-                    <a href="<%= contextPath %>/storage/storageModifyView.do?stId=<%= oneOfStorage.getStId() %>" class="btn btn-info">정보수정</a>
+                    <a href="<%= contextPath %>/storage/storageModifyView.do?stId=<%= oneOfStorage.getStId() %>" id="stModifyBtn" class="btn btn-info">정보수정</a>
                 </div>
 
 			</div>
@@ -79,7 +78,16 @@
 <script src="<%=contextPath%>/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 <script>
 	$(function(){
-		$('a[disabled="true"]').bind('click', false);
+        stockStatusChk();
+
+        // 상태가 정상이 아닌 경우에 수정되지 않도록 설정
+        function stockStatusChk(){
+            var status = $('#getStStatus').val();
+
+            if(status !== "정상"){
+                $('#stModifyBtn').attr('disabled', true).bind('click', false);
+            }
+        }
 	});
 </script>
 </html>

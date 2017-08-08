@@ -59,7 +59,7 @@
 			FROM
 				STORAGE s, PRODUCT p
 			WHERE
-				s.P_ID = p.P_ID
+				s.P_ID = p.P_ID and ST_STATUS = '정상'
 			ORDER BY
 				ST_GETDATE ASC
 	</select>
@@ -90,6 +90,14 @@
 		, ST_WASTEDATE = #{stWastedate, jdbcType=VARCHAR}
 		, ST_WASTECOST = #{stWastecost, jdbcType=INTEGER}
 		, ST_WASTE_REASON =#{stWasteReason, jdbcType=INTEGER}
+		WHERE
+		ST_ID = #{stId, jdbcType=VARCHAR}
+	</update>
+
+	<update id="changeStatusToRent" parameterType="storageVO">
+		UPDATE STORAGE
+		SET
+		ST_STATUS = #{stStatus, jdbcType=VARCHAR}
 		WHERE
 		ST_ID = #{stId, jdbcType=VARCHAR}
 	</update>

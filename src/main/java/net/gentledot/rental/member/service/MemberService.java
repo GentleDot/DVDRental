@@ -14,5 +14,6 @@ public interface MemberService {
 	public int updateMember(MemberVO vo);
 	public int leaveMember(MemberVO vo);
 	public int delMember(MemberVO vo);
-	
+	public int decreaseLimit(MemberVO vo);
+	public int increaseLimit(MemberVO vo);
 }

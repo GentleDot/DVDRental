@@ -122,6 +122,22 @@
     			WHERE
     				M_ID = #{mId, jdbcType=VARCHAR}
     	</update>
+
+		<update id="decreaseLimit" parameterType="memberVO">
+			UPDATE MEMBER
+			SET
+				M_LIMIT = M_LIMIT - 1
+			WHERE
+				M_ID = #{mId, jdbcType=VARCHAR}
+		</update>
+
+		<update id="increaseLimit" parameterType="memberVO">
+			UPDATE MEMBER
+			SET
+			M_LIMIT = M_LIMIT + 1
+			WHERE
+			M_ID = #{mId, jdbcType=VARCHAR}
+		</update>
     	
     	
     	<delete id="delMember" parameterType="memberVO">

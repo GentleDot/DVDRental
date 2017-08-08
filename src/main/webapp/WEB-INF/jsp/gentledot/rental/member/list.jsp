@@ -18,14 +18,18 @@
 <link rel="stylesheet" href="<%=contextPath%>/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css">
 <title>회원 목록 조회</title>
 	<style>
-		.row{
+		.row {
 			margin-bottom: 1em;
 		}
 	</style>
 </head>
 <body>
 <div id="container">
-	<header></header>
+	<header>
+		<jsp:include page ="/WEB-INF/jsp/gentledot/inc/menu_header.jsp">
+			<jsp:param name="curPage" value="member" />
+		</jsp:include>
+	</header>
 	<section class="main">
 		<section class="row">
 			<div class="col-md-8 col-md-offset-2">
@@ -70,8 +74,14 @@
 
 					</tfoot>
 					<tbody>
-					<% for(MemberVO member : resultList){ %>
+					<%
+						for(MemberVO member : resultList){
+						    if(member.getmStatus().equals("O")){
+					%>
+						<tr class="bg-danger text-danger">
+					<% 		}else{%>
 						<tr>
+					<% 		} %>
 							<td>
 								<a href="<%= contextPath %>/member/memberInfo.do?mId=<%=Tools.customToEmptyBlank(member.getmId(), "")%>"><%=Tools.customToEmptyBlank(member.getmId(), "")%></a>
 							</td>
@@ -86,9 +96,19 @@
 							</td>
 							<td><%=Tools.customToEmptyBlank(member.getmLimit(), "0")%>
 							</td>
+					<% if(member.getmStatus().equals("O")){ %>
 							<td>
-								<a href="<%= contextPath %>/rent/addRentView.do?mId=<%=member.getmId()%>" class="btn btn-default">상품 대여</a>
+								<span class="text-muted">탈퇴된 회원</span>
 							</td>
+					<% 		}else{%>
+							<td>
+								<% if(member.getmLimit().equals("0")){ %>
+								<span class="btn btn-warning">대여한도 초과</span>
+								<% }else{ %>
+								<a href="<%= contextPath %>/rent/addRentView.do?mId=<%=member.getmId()%>" class="btn btn-default">상품 대여</a>
+								<% } %>
+							</td>
+					<% 		} %>
 						</tr>
 					<% }%>
 					</tbody>

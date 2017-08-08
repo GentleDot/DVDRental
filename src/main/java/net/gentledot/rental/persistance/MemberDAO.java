@@ -44,4 +44,12 @@ public class MemberDAO extends EgovAbstractMapper {
 	public int delMember(MemberVO vo){
 		return delete("delMember", vo);
 	}
+
+	public int decreaseLimit(MemberVO vo){
+		return update("decreaseLimit", vo);
+	}
+
+	public int increaseLimit(MemberVO vo){
+		return update("increaseLimit", vo);
+	}
 }
