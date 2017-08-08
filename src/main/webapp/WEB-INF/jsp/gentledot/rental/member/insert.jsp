@@ -98,8 +98,8 @@
 								<option value="0130">0130</option>
 							</select>
 
-							<input type="number" id="phoneNum2" name="phoneNum2" class="numBox" min="0" max="9999" />
-							<input type="number" id="phoneNum3" name="phoneNum3" class="numBox" min="0" max="9999"  />
+							<input type="number" id="phoneNum2" name="phoneNum2" class="numBox" min="0" max="9999" maxlength="4"/>
+							<input type="number" id="phoneNum3" name="phoneNum3" class="numBox" min="0" max="9999" maxlength="4" />
 						</li>
 						<li class="list-group-item form-group">
 							<label for="inputMMail">이메일 : </label>
@@ -157,9 +157,8 @@
             var checkEMail = $('#chkEmail').val();
 
             if (inputEMail != checkEMail){
-                alert('이메일이 올바르지 않습니다. 다시 입력해주세요.');21]=[
+                alert('이메일이 올바르지 않습니다. 다시 입력해주세요.');
 
-                    4.
                 $('#chkEmail').val('');
                 $('#inputMMail').val('').focus();
                 return;
@@ -177,10 +176,15 @@
         }
 
         function phoneNumChk(){
+            var regExp = /^\D*#/g;
+
             if($(this).val() > 0 && ($(this).val() < 100 || $(this).val() > 9999)){
                 alert('올바른 전화번호를 입력해주세요.');
                 $(this).val('').focus();
-            }
+            }else if($(this).val() !== "" && regExp.test($(this).val())){
+                alert('올바른 전화번호를 입력해주세요.');
+                $(this).val('').focus();
+			}
         }
     });
 </script>

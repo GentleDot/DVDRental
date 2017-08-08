@@ -94,19 +94,19 @@
 					</thead>
 					<tfoot>
 					<tr>
-						<th colspan="3">수  익</th>
+						<th class="text-center" colspan="3">수  익</th>
 						<td id="totalGains" class="text-center text-info h3" colspan="2"></td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
-						<th colspan="3">비  용</th>
+						<th class="text-center" colspan="3">비  용</th>
 						<td></td>
 						<td></td>
 						<td id="totalCosts" class="text-center text-danger h3" colspan="2"></td>
 					</tr>
 					<tr>
-						<th>총  계</th>
+						<th class="text-center" colspan="3">총  계</th>
 						<td id="calRevenue" class="text-center h2" colspan="4"></td>
 					</tr>
 					</tfoot>
