@@ -62,8 +62,8 @@
 		</insert>
 
     	<insert id="addPutPrice" parameterType="salesVO">
-			INSERT INTO SALES(S_DATE, P_ID, S_PRICE)
-			VALUES (#{sDate, jdbcType=VARCHAR}, #{pId, jdbcType=VARCHAR}, #{sPrice, jdbcType=INTEGER})
+			INSERT INTO SALES(S_DATE, ST_ID, P_ID, S_PRICE)
+			VALUES (#{sDate, jdbcType=VARCHAR}, #{stId, jdbcType=VARCHAR}, #{pId, jdbcType=VARCHAR}, #{sPrice, jdbcType=INTEGER})
 		</insert>
 
     	<insert id="addPutWastecost" parameterType="salesVO">

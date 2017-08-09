@@ -67,7 +67,7 @@
 
                 <div class="btn-group">
                     <a href="<%= contextPath %>/rent/rentList.do" class="btn btn-default">목록으로</a>
-                    <a href="<%= contextPath %>/rent/rentDel.do?mId=<%= details.getmId() %>&rentdate=<%= details.getrRentdate()%>&stId=<%= details.getStId() %>" class="btn btn-warning">대여 정보 삭제</a>
+                    <a href="<%= contextPath %>/rent/rentDel.do?mId=<%= details.getmId() %>&rentdate=<%= details.getrRentdate()%>&stId=<%= details.getStId() %>" class="btn btn-warning" disabled="disabled">대여 정보 삭제</a>
                 </div>
 
 			</div>
@@ -81,6 +81,7 @@
 <script>
 	$(function(){
 	    returnChk();
+        clickPrevent();
 
 		// 반납 여부 확인
 	    function returnChk(){
@@ -89,6 +90,11 @@
                 $('#updateRentInfo').attr('disabled', 'true').bind('click', false);
             }
         }
+
+        // 링크 클릭 방지 설정
+        function clickPrevent(){
+	        $('a[disabled]').bind('click', false);
+		}
 
 	});
 </script>

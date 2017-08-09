@@ -31,7 +31,7 @@
 	</header>
 	<section class="main">
 		<section class="row">
-			<div class="col-md-12">
+			<div class="col-md-8 col-md-offset-2">
 				<h2>제품 목록</h2>
 				<form action="<%= contextPath %>/product/productList.do" method="post" class="form-inline text-center" name="sendSearchKeyword">
 					<fieldset class="form-group">
@@ -63,8 +63,8 @@
 					<thead>
 					<tr>
 						<th>ID</th>
-						<th>제품명</th>
-						<th>제품가격</th>
+						<th>제품 이름</th>
+						<th>제품 가격</th>
 						<th>등급</th>
 					</tr>
 					</thead>

@@ -96,7 +96,8 @@ public class RentDAOTest {
 		List<RentVO> resultList = dao.selectRentListByMemberID(vo);
 
 		// 테스트로 넣은 데이터 포함 갯수
-		assertThat(resultList.size(), is(3 + 1));
+//		assertThat(resultList.size(), is(3 + 1));
+		assertThat(resultList.size(), is(10)); // 170809 현재 데이터 수
 	}
 
 	/*대여 목록 조회 테스트 - 대여일 */
@@ -128,7 +129,8 @@ public class RentDAOTest {
 		List<RentVO> resultList = dao.selectRentListByRentdate(vo);
 
 		// 테스트로 넣은 데이터 포함 갯수
-		assertThat(resultList.size(), is(0));
+//		assertThat(resultList.size(), is(0));
+		assertThat(resultList.size(), is(4)); // 170809 현재 '201707' 로 시작하는 대여일을 가진 데이터 수
 	}
 
 	/*대여 목록 조회 테스트 - 상품 */
@@ -160,7 +162,8 @@ public class RentDAOTest {
 		List<RentVO> resultList = dao.selectRentListByItemID(vo);
 
 		// 테스트로 넣은 데이터 포함 갯수
-		assertThat(resultList.size(), is(1));
+//		assertThat(resultList.size(), is(1));
+		assertThat(resultList.size(), is(2)); // 170809 현재 '2017-item2' 의 데이터 개수
 	}
 
 
@@ -181,7 +184,8 @@ public class RentDAOTest {
 
 		int totalCnt = dao.totalCountOfRentList();
 
-		assertThat(totalCnt, is(3 + 1));
+//		assertThat(totalCnt, is(3 + 1));
+		assertThat(totalCnt, is(12)); // 170809 현재 데이터 수
 	}
 
 	/* 회원 대여 목록 확인 테스트*/

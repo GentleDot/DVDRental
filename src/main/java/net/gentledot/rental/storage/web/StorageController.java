@@ -71,15 +71,36 @@ public class StorageController {
 
 	@RequestMapping("/storage/addStorage.do")
 	public String addStorageInList(@RequestParam HashMap<String, String> req, ModelMap model){
-		String stGetdate= Tools.customToEmptyBlank(req.get("inputStGetdate"), "99999999");
-		String pId= Tools.customToEmptyBlank(req.get("inputPid"), "1");
+		String stGetdate= Tools.customToEmptyBlank(req.get("inputStGetdate"), "");
+		String pId= Tools.customToEmptyBlank(req.get("inputPid"), "");
 
+		if (stGetdate.equals("") || pId.equals("")){
+			return "redirect:/storage/addStorageView.do";
+		}
 
 		StorageVO insertVO = new StorageVO();
 		insertVO.setStGetdate(stGetdate);
 		insertVO.setpId(pId);
 
 		int resultStatus = storageService.addStorage(insertVO);
+
+		// 매출 목록에 구입비 추가
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+		ProductVO productVO = new ProductVO();
+		productVO.setpId(pId);
+		ProductVO oneOfProduct = productService.selectOneOfProduct(productVO);
+
+		String pPrice = oneOfProduct.getpPrice();
+
+		String curDate = sdf.format(date);
+
+		SalesVO salesData = new SalesVO();
+		salesData.setsDate(curDate);
+		salesData.setpId(pId);
+		salesData.setsPrice(pPrice);
+		salesService.addPutPrice(salesData);
 		
 		return "redirect:/storage/storageList.do";
 	}

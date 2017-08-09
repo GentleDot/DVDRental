@@ -185,11 +185,6 @@
         calTotalReturns();
 
 
-        function goPage(pageNo){
-            document.searchPeriodForm.pageNo.value = pageNo;
-            document.searchPeriodForm.submit();
-        }
-
         function pageNoInitializer(){
             $("input[name='pageNo']").val(1);
         }
@@ -234,5 +229,10 @@
 
 		}
 	});
+
+    function goPage(pageNo){
+        document.searchPeriodForm.pageNo.value = pageNo;
+        document.searchPeriodForm.submit();
+    }
 </script>
 </html>

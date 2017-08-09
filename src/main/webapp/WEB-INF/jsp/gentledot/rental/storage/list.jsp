@@ -32,7 +32,7 @@
 	</header>
 	<section class="main">
 		<section class="row">
-			<div class="col-md-12">
+			<div class="col-md-8 col-md-offset-2">
 				<h2>재고 목록</h2>
 				<form action="<%= contextPath %>/storage/storageList.do" method="post" class="form-inline text-center" name="sendSearchKeyword">
 					<fieldset class="form-group">

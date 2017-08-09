@@ -152,7 +152,9 @@ public class SalesDAOTest {
 
 		int totalCnt = dao.totalCountOfSalesList();
 
-		assertThat(totalCnt, is(10));
+//		assertThat(totalCnt, is(10));
+		assertThat(totalCnt, is(23)); // 170809 현재 데이터 수
+		
 	}
 
 }

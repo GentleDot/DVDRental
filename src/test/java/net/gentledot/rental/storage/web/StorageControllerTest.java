@@ -111,7 +111,7 @@ public class StorageControllerTest {
 	}
 	
 	@Test
-	public void addStorageInListTest() throws Exception{
+	public void addEmptyStorageInListTest() throws Exception{
 		String stGetdate = "";
 		String pId = "";
 
@@ -125,7 +125,29 @@ public class StorageControllerTest {
 
 		mockMvc.perform(get("/storage/addStorage.do"))
 					.andExpect(status().is3xxRedirection())
-					.andExpect(redirectedUrl("/storage/storageList.do"));
+					.andExpect(redirectedUrl("/storage/addStorageView.do"));
+
+	}
+	
+	@Test
+	public void addStorageInListTest() throws Exception{
+//		String stId = "2017-item999";
+		String stGetdate = "20170101";
+		String pId = "1";
+		String curDate = "20170808";
+
+		StorageVO insertVO = new StorageVO();
+//		insertVO.setStId(stId);
+		insertVO.setStGetdate(stGetdate);
+		insertVO.setpId(pId);
+
+		when(service.addStorage((StorageVO) anyObject())).thenReturn(1);
+
+		int resultStatus = service.addStorage(insertVO);
+
+		mockMvc.perform(get("/storage/addStorage.do"))
+						.andExpect(status().is3xxRedirection())
+						.andExpect(redirectedUrl("/storage/storageList.do"));
 
 	}
 

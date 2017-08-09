@@ -99,18 +99,6 @@ public class ProductController {
 		insertVO.setpGrade(pGrade);
 
 		int resultStatus = productService.addProduct(insertVO);
-
-		// 매출 목록에 구입비 추가
-		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-
-		String curDate = sdf.format(date);
-
-		SalesVO salesData = new SalesVO();
-		salesData.setsDate(curDate);
-		salesData.setpId(pId);
-		salesData.setsPrice(pPrice);
-		salesService.addPutPrice(salesData);
 		
 		return "redirect:/product/productList.do";
 	}

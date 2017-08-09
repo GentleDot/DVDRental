@@ -221,7 +221,7 @@ public class RentController {
 		LOGGER.debug("-----------------------------");
 
 		if(returndateStr.equals("")){
-			return "redirect:/rent/rentModify.do?mId" + mId + "&rentdate=" + rentdate + "&stId=" + stId;
+			return "redirect:/rent/rentModifyView.do?mId=" + mId + "&rentdate=" + rentdate + "&stId=" + stId;
 		}
 
 		RentVO vo = new RentVO();

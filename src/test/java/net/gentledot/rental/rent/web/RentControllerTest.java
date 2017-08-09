@@ -106,6 +106,31 @@ public class RentControllerTest {
 	}
 	
 	@Test
+	public void addEmptyRentInList() throws Exception{
+		String mId = "201799999";
+		String rentdate = "";
+		String stId = "";
+		String rentPeriod = "";
+		String charge = "";
+		
+		RentVO insertVO = new RentVO();
+		insertVO.setmId(mId);               
+		insertVO.setrRentdate(rentdate);    
+		insertVO.setStId(stId);             
+		insertVO.setrRentperiod(rentPeriod);
+
+		when(service.addRent((RentVO) anyObject())).thenReturn(1);
+
+		int resultStatus = service.addRent(insertVO);
+		
+		mockMvc.perform(get("/rent/addRent.do")
+				.param("inputRmId", mId))
+					.andExpect(status().is3xxRedirection())
+					.andExpect(redirectedUrl("/rent/addRentView.do?mId=" + mId));
+		
+	}
+	
+	@Test
 	public void addRentInList() throws Exception{
 		String mId = "";
 		String rentdate = "";
@@ -174,6 +199,36 @@ public class RentControllerTest {
 				.andExpect(model().attributeExists("details"));
 	}
 
+	@Test
+	public void updateEmptyRentInfoTest() throws Exception{
+		String mId = "170799999";
+		String rentdate = "20170808";
+		String stId = "999";
+		String returndate = "";
+		String returnStatus = "";
+		String arrears = "";
+		String arrearsClear = "";
+
+		vo.setmId(mId);
+		vo.setrRentdate(rentdate);
+		vo.setStId(stId);
+		vo.setrReturndate(returndate);
+		vo.setrReturnStatus(returnStatus);
+		vo.setrArrears(arrears);
+		vo.setrArrearsClear(arrearsClear);
+
+		when(service.updateRent((RentVO) anyObject())).thenReturn(1);
+		int resultStatus = service.updateRent(vo);
+		
+		mockMvc.perform(get("/rent/rentModify.do")
+				.param("getRmId", mId)
+				.param("getRrentdate", rentdate)
+				.param("getRstId", stId))
+					.andExpect(status().is3xxRedirection())
+					.andExpect(redirectedUrl("/rent/rentModifyView.do?mId=" + mId + "&rentdate=" + rentdate + "&stId=" + stId));
+		
+	}
+	
 	@Test
 	public void updateRentInfoTest() throws Exception{
 		String mId = "";

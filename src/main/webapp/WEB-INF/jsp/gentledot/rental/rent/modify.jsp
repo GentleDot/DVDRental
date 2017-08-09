@@ -123,7 +123,7 @@
 
 			if(curDate > rentdate){
 				var afterDays = Number(<%= diff %>);
-				var setArrears = afterDays >= 12 ? (200 * 12) : (200 * afterDays);
+				var setArrears = afterDays >= 14 ? (200 * 12) : (200 * afterDays);
 				$('#getRarrears').val(setArrears);
 			}
 		}

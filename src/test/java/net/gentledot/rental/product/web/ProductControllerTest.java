@@ -108,7 +108,7 @@ public class ProductControllerTest {
 	}
 	
 	@Test
-	public void addProductInList() throws Exception{
+	public void addEmptyProductInListTest() throws Exception{
 		String pName= "";
 		String pPrice = "";
 		String pGrade = "";
@@ -125,7 +125,29 @@ public class ProductControllerTest {
 		
 		mockMvc.perform(get("/product/addProduct.do"))
 					.andExpect(status().is3xxRedirection())
-					.andExpect(redirectedUrl("/product/productList.do"));
+					.andExpect(redirectedUrl("/product/addProductView.do"));
+		
+	}
+	
+	@Test
+	public void addProductInListTest() throws Exception{
+		String pName= "test";
+		String pPrice = "10000";
+		String pGrade = "15";
+		
+		ProductVO insertVO = new ProductVO();
+		insertVO.setpId("1");
+		insertVO.setpName(pName);
+		insertVO.setpPrice(pPrice);
+		insertVO.setpGrade(pGrade);
+
+		when(service.addProduct((ProductVO) anyObject())).thenReturn(1);
+
+		int resultStatus = service.addProduct(insertVO);
+		
+		mockMvc.perform(get("/product/addProduct.do"))
+					.andExpect(status().is3xxRedirection())
+					.andExpect(redirectedUrl("/product/addProductView.do"));
 		
 	}
 

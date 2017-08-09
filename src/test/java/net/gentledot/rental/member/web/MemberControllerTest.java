@@ -8,7 +8,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +93,7 @@ public class MemberControllerTest {
 	}
 	
 	@Test
-	public void addMemberInList() throws Exception{
+	public void addEmptyMemberInListTest() throws Exception{
 		String mId = "";      
 		String mName = "";    
 		String mBirth = "";   
@@ -111,6 +114,49 @@ public class MemberControllerTest {
 		when(service.addMember((MemberVO) anyObject())).thenReturn(1);
 		
 		mockMvc.perform(get("/member/addMember.do"))
+					.andExpect(status().is3xxRedirection())
+					.andExpect(redirectedUrl("/member/addMemberView.do"));
+	}
+	
+	@Test
+	public void addMemberInListTest() throws Exception{
+		String mId = "170799999";      
+		String mName = "test";    
+		String mBirthStr = "2017-01-01";   
+		String mJoinDate = "20170101";
+		String mAddr = "test";    
+		String mPhone = "01000000000";   
+		String mMail = "test@test.co.kr";
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
+		Date tempBirth = null;
+		try {
+			tempBirth = sdf.parse(mBirthStr);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String mBirth = sdf2.format(tempBirth);
+		
+		MemberVO insertVO = new MemberVO();
+		insertVO.setmId(mId);
+		insertVO.setmName(mName);
+		insertVO.setmBirth(mBirth);
+		insertVO.setmJoinDate(mJoinDate);
+		insertVO.setmAddr(mAddr);
+		insertVO.setmPhone(mPhone);
+		insertVO.setmMail(mMail);
+		
+		when(service.addMember((MemberVO) anyObject())).thenReturn(1);
+		
+		mockMvc.perform(get("/member/addMember.do")
+				.param("inputMName", mName)
+				.param("inputMBirth", mBirthStr)
+				.param("inputMJoinDate", mJoinDate)
+				.param("inputMAddr", mAddr)
+				.param("inputMPhone", mPhone)
+				.param("inputMMail", mMail))
 					.andExpect(status().is3xxRedirection())
 					.andExpect(redirectedUrl("/member/memberList.do"));
 		
@@ -145,13 +191,13 @@ public class MemberControllerTest {
 	
 	@Test
 	public void updateMemberInfoTest() throws Exception{
-		String mId = "";      
-		String mName = "";    
-		String mBirth = "";   
-		String mJoinDate = "";
-		String mAddr = "";    
-		String mPhone = "";   
-		String mMail = "";
+		String mId = "170799999";      
+		String mName = "test";    
+		String mBirth = "20170101";   
+		String mJoinDate = "20170101";
+		String mAddr = "test";    
+		String mPhone = "01000000000";   
+		String mMail = "test@test.co.kr";
 		
 		MemberVO insertVO = new MemberVO();
 		insertVO.setmId(mId);
@@ -164,7 +210,7 @@ public class MemberControllerTest {
 		
 		when(service.updateMember((MemberVO) anyObject())).thenReturn(1);
 		
-		mockMvc.perform(get("/member/memberModifyView.do"))
+		mockMvc.perform(get("/member/memberModify.do"))
 					.andExpect(status().is3xxRedirection())
 					.andExpect(redirectedUrl("/member/memberList.do"));
 		
