@@ -176,14 +176,13 @@
         }
 
         function phoneNumChk(){
-            var regExp = /^\D*#/g;
 
             if($(this).val() > 0 && ($(this).val() < 100 || $(this).val() > 9999)){
                 alert('올바른 전화번호를 입력해주세요.');
-                $(this).val('').focus();
-            }else if($(this).val() !== "" && regExp.test($(this).val())){
-                alert('올바른 전화번호를 입력해주세요.');
-                $(this).val('').focus();
+                $(this).val('0000').focus();
+            }else if($(this).val() === ""){
+                alert('전화번호를 입력해주세요.');
+                $(this).val('0000').focus();
 			}
         }
     });
