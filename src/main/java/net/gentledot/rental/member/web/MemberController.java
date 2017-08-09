@@ -89,6 +89,10 @@ public class MemberController {
 		String mAddr = Tools.customToEmptyBlank(req.get("inputMAddr"),"");
 		String mPhone = Tools.customToEmptyBlank(req.get("inputMPhone"),"");
 		String mMail = Tools.customToEmptyBlank(req.get("inputMMail"),"");
+
+		if(mName.equals("") || mBirthStr.equals("") || mAddr.equals("") || mMail.equals("") ){
+			return "redirect:/member/addMemberView.do";
+		}
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
@@ -198,6 +202,13 @@ public class MemberController {
 	
 	@RequestMapping("/member/memberDel.do")
 	public String delMember(@RequestParam HashMap<String, String> req, ModelMap model){
+		String mId = Tools.customToEmptyBlank(req.get("mId"), "");
+
+		MemberVO vo = new MemberVO();
+		vo.setmId(mId);
+
+		int resultStatus = memberService.delMember(vo);
+
 		return "redirect:/member/memberList.do";
 	}
 	

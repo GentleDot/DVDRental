@@ -1,14 +1,10 @@
-<%@page import="net.gentledot.rental.vo.MemberVO"%>
-<%@ page import="java.util.List" %>
-<%@ page import="org.springframework.web.servlet.support.RequestContextUtils" %>
-<%@ page import="net.gentledot.utils.Tools" %>
-<%@ page import="java.util.Calendar" %>
+<%@page import="java.text.DecimalFormat"%>
 <%@ page import="java.text.NumberFormat" %>
-<%@ page import="java.text.DecimalFormat" %>
-<%@ page import="java.util.Date" %>
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Calendar" %>
+<%@ page import="java.util.Date" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+		 pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko-KR">
 <%

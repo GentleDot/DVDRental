@@ -91,7 +91,7 @@
                 <div class="btn-group">
                     <a href="<%= contextPath %>/member/memberList.do" class="btn btn-default">목록으로</a>
                     <a href="<%= contextPath %>/member/memberModifyView.do?mId=<%= Tools.customToEmptyBlank(oneOfMember.getmId(), "") %>" id="modifyMemberInfo" class="btn btn-info">정보수정</a>
-                    <a href="<%= contextPath %>/member/memberDel.do.do?mId=<%= Tools.customToEmptyBlank(oneOfMember.getmId(), "") %>" class="btn btn-warning">회원삭제</a>
+                    <a href="<%= contextPath %>/member/memberDel.do.do?mId=<%= Tools.customToEmptyBlank(oneOfMember.getmId(), "") %>" class="btn btn-warning" disabled="disabled">회원삭제</a>
                 </div>
 
 			</div>
@@ -106,6 +106,7 @@
 	$(function(){
 	    convertPhoneNum();
         memberOutChk();
+        clickPrevention();
 
 		function convertPhoneNum() {
             var phoneNum = $('#getMPhone').val();
@@ -125,6 +126,10 @@ convertedTel = phoneNum.substr(0, 3) + "-" + phoneNum.substr(3, 3) + "-" + phone
 		    if(memberStatus === "탈퇴"){
 				$('#modifyMemberInfo').attr('disabled', true).bind('click', false);
 			}
+		}
+
+		function clickPrevention(){
+            $('a[disabled]').bind('click', false);
 		}
 	});
 </script>

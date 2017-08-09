@@ -31,16 +31,23 @@
 	String curDate = sdf2.format(date);
 
 	String mPhone = oneOfMember.getmPhone();
-	String tel1 = mPhone.substring(0, 3);
+
+	String tel1 = "";
 	String tel2 = "";
 	String tel3 = "";
-	int mPhoneLen = mPhone.length();
-	if (mPhoneLen == 11){
-		tel2 = mPhone.substring(3, 7);
-		tel3 = mPhone.substring(7, 11);
-	}else if(mPhoneLen == 10){
-	    tel2 = mPhone.substring(3, 7);
-	    tel3 = mPhone.substring(6, 10);
+	if (mPhone == null || mPhone.equals("")) {
+
+	}else{
+		tel1 = mPhone.substring(0, 3);
+
+		int mPhoneLen = mPhone.length();
+		if (mPhoneLen == 11){
+			tel2 = mPhone.substring(3, 7);
+			tel3 = mPhone.substring(7, 11);
+		}else if(mPhoneLen == 10){
+			tel2 = mPhone.substring(3, 7);
+			tel3 = mPhone.substring(6, 10);
+		}
 	}
 
 %>
