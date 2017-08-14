@@ -1,6 +1,8 @@
 package net.gentledot.rental.sales.web;
 
+import net.gentledot.rental.rent.service.RentService;
 import net.gentledot.rental.sales.service.SalesService;
+import net.gentledot.rental.vo.RentVO;
 import net.gentledot.rental.vo.SalesVO;
 import net.gentledot.utils.Pagination;
 import net.gentledot.utils.Tools;
@@ -25,6 +27,9 @@ public class SalesController {
 	
 	@Resource(name="salesService")
 	private SalesService salesService;
+
+	@Resource(name="rentService")
+	private RentService rentService;
 	
 	@RequestMapping("/sales/salesList.do")
 	public String selectSalesList(@RequestParam HashMap<String, String> req, ModelMap model){
@@ -64,6 +69,61 @@ public class SalesController {
 		model.addAttribute("pageNo", pageNo);
 		
 		return "rental/sales/list";
+	}
+
+	@RequestMapping("/sales/rentStatusOfMember.do")
+	public String chkRentDetailOfMember(@RequestParam HashMap<String, String> req, ModelMap model){
+		LOGGER.debug("===============");
+		LOGGER.debug("받은 id : " + req.get("mId"));
+		LOGGER.debug("받은 날짜 : " + req.get("rentdate"));
+		LOGGER.debug("===============");
+
+		Calendar calendar = Calendar.getInstance();
+		NumberFormat nf = new DecimalFormat("00");
+
+		// 현재 년도와 월로 구성
+		String curDate =calendar.get(Calendar.YEAR) + nf.format(calendar.get(Calendar.MONTH) + 1) + "";
+
+		String mId = Tools.customToEmptyBlank(req.get("mId"), "");
+		String selectedDate = Tools.customToEmptyBlank(req.get("rentdate"), curDate);
+
+		RentVO vo = new RentVO();
+		vo.setmId(mId);
+		vo.setrRentdate(selectedDate);
+
+		List<RentVO> rentList = rentService.checkRentDetailOfMember(vo);
+
+		LOGGER.debug("=======================");
+		LOGGER.debug("rentListSize = " + rentList.size());
+		LOGGER.debug("=======================");
+
+		model.addAttribute("resultList", rentList);
+		model.addAttribute("selectedDate", selectedDate);
+
+		return "rental/sales/statusMember";
+	}
+
+	@RequestMapping("/sales/rentStatusOfGoods.do")
+	public String chkRentDetailOfGoods(@RequestParam HashMap<String, String> req, ModelMap model){
+		Calendar calendar = Calendar.getInstance();
+		NumberFormat nf = new DecimalFormat("00");
+
+		// 현재 년도와 월로 구성
+		String curDate =calendar.get(Calendar.YEAR) + nf.format(calendar.get(Calendar.MONTH) + 1) + "";
+
+		String stId = Tools.customToEmptyBlank(req.get("stId"), "");
+		String selectedDate = Tools.customToEmptyBlank(req.get("rentdate"), curDate);
+
+		RentVO vo = new RentVO();
+		vo.setStId(stId);
+		vo.setrRentdate(selectedDate);
+
+		List<RentVO> rentList = rentService.checkRentDetailOfGoods(vo);
+
+		model.addAttribute("resultList", rentList);
+		model.addAttribute("selectedDate", selectedDate);
+
+		return "rental/sales/statusGoods";
 	}
 
 }

@@ -37,7 +37,7 @@
 		FROM
 		STORAGE s, PRODUCT p
 		WHERE ST_ID LIKE '%'||#{stId}||'%' and s.P_ID = p.P_ID
-		ORDER BY ST_GETDATE ASC
+		ORDER BY ST_ID, ST_GETDATE
 		) a
 		)
 		WHERE

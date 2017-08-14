@@ -54,15 +54,8 @@ public class StorageServiceImpl implements StorageService{
     public int addStorage(StorageVO vo){
         /*String stGetdate = "20170728";
         String pId = "1";*/
-        Calendar cal = Calendar.getInstance();
-        int curYear = cal.get(Calendar.YEAR);
-
-        String tableName = "storage";
-		String getId = idsService.getNextId(tableName);
-        String stId = curYear + "-item" + getId;
         String stStatus = "정상";
 
-        vo.setStId(stId);
         vo.setStStatus(stStatus);
 
         return dao.addStorage(vo);

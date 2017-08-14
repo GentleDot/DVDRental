@@ -107,6 +107,14 @@ public class RentServiceImpl implements RentService{
         return dao.selectOneOfRent(vo);
     }
 
+    public List<RentVO> checkRentDetailOfMember(RentVO vo){
+        return dao.checkRentDetailOfMember(vo);
+    }
+
+    public List<RentVO> checkRentDetailOfGoods(RentVO vo){
+        return dao.checkRentDetailOfGoods(vo);
+    }
+
     public RentVO checkRentDetail(RentVO vo){
         return dao.checkRentDetail(vo);
     }

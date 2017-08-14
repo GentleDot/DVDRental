@@ -278,5 +278,4 @@ public class RentControllerTest {
 				.andExpect(status().is3xxRedirection())
 				.andExpect(redirectedUrl("/rent/rentList.do"));
 	}
-
 }

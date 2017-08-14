@@ -277,4 +277,36 @@ public class RentDAOTest {
 		// searchVO가 없는 경우 null, 존재하는 경우 false 반환
 		assertNull("제거된 대여 정보는 조회되지 않아야 한다.",searchVO);
 	}
+
+	/*회원 대여 내역 조회 테스트*/
+	@Test
+	public void checkRentDetailOfMemberTest(){
+		String mId = "170700001";
+		String rentdate = "201707";
+
+		RentVO vo = new RentVO();
+		vo.setmId(mId);
+		vo.setrRentdate(rentdate);
+
+		List<RentVO> resultList = dao.checkRentDetailOfMember(vo);
+
+		assertThat(resultList.size(), is(2));
+
+	}
+
+	/*상품 대여 내역 조회 테스트*/
+	@Test
+	public void checkRentDetailOfGoodsTest(){
+		String stId = "2017-item1";
+		String rentdate = "201708";
+
+		RentVO vo = new RentVO();
+		vo.setStId(stId);
+		vo.setrRentdate(rentdate);
+
+		List<RentVO> resultList = dao.checkRentDetailOfGoods(vo);
+
+		assertThat(resultList.size(), is(2));
+
+	}
 }

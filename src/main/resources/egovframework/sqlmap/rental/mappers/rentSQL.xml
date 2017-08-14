@@ -112,6 +112,28 @@
 		r.M_ID = #{mId} and r.R_RENTDATE = #{rRentdate} and r.ST_ID = #{stId} and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID and r.M_ID = m.M_ID
 	</select>
 
+	<select id="checkRentDetailOfMember" parameterType="rentVO" resultMap="rentMap">
+		SELECT
+		r.M_ID, r.R_RENTDATE, r.ST_ID, r.R_CHARGE, r.R_RETURNDATE, r.R_RETURNSTATUS, r.R_ARREARS, p.P_NAME, m.M_NAME
+		FROM
+		RENT r, STORAGE s, PRODUCT p, MEMBER m
+		WHERE
+		r.M_ID = #{mId} and r.R_RENTDATE LIKE #{rRentdate}||'%' and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID and r.M_ID = m.M_ID
+		ORDER BY
+			r.M_ID, r.R_RENTDATE
+	</select>
+
+	<select id="checkRentDetailOfGoods" parameterType="rentVO" resultMap="rentMap">
+		SELECT
+		r.M_ID, r.R_RENTDATE, r.ST_ID, r.R_CHARGE, r.R_RETURNDATE, r.R_RETURNSTATUS, r.R_ARREARS, p.P_NAME, m.M_NAME
+		FROM
+		RENT r, STORAGE s, PRODUCT p, MEMBER m
+		WHERE
+		r.ST_ID = #{stId} and r.R_RENTDATE LIKE #{rRentdate}||'%' and r.ST_ID = s.ST_ID and s.P_ID = p.P_ID and r.M_ID = m.M_ID
+		ORDER BY
+		r.M_ID, r.R_RENTDATE
+	</select>
+
 	<insert id="addRent" parameterType="rentVO">
 		INSERT INTO RENT(
 		M_ID

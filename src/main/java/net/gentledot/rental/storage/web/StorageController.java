@@ -1,5 +1,6 @@
 package net.gentledot.rental.storage.web;
 
+import net.gentledot.ids.service.IdsService;
 import net.gentledot.rental.product.service.ProductService;
 import net.gentledot.rental.sales.service.SalesService;
 import net.gentledot.rental.storage.service.StorageService;
@@ -17,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class StorageController {
@@ -36,6 +34,9 @@ public class StorageController {
 
 	@Resource(name="salesService")
 	private SalesService salesService;
+
+	@Resource(name="idsService")
+	private IdsService idsService;
 
 	
 	@RequestMapping("/storage/storageList.do")
@@ -74,11 +75,19 @@ public class StorageController {
 		String stGetdate= Tools.customToEmptyBlank(req.get("inputStGetdate"), "");
 		String pId= Tools.customToEmptyBlank(req.get("inputPid"), "");
 
+		Calendar cal = Calendar.getInstance();
+		int curYear = cal.get(Calendar.YEAR);
+
+		String tableName = "storage";
+		String getId = idsService.getNextId(tableName);
+		String stId = curYear + "-item" + getId;
+
 		if (stGetdate.equals("") || pId.equals("")){
 			return "redirect:/storage/addStorageView.do";
 		}
 
 		StorageVO insertVO = new StorageVO();
+		insertVO.setStId(stId);
 		insertVO.setStGetdate(stGetdate);
 		insertVO.setpId(pId);
 
@@ -96,8 +105,10 @@ public class StorageController {
 
 		String curDate = sdf.format(date);
 
+		// 재고 반영 시 구입비를 매출 데이터로 추가
 		SalesVO salesData = new SalesVO();
 		salesData.setsDate(curDate);
+		salesData.setStId(stId);
 		salesData.setpId(pId);
 		salesData.setsPrice(pPrice);
 		salesService.addPutPrice(salesData);

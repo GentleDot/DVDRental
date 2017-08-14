@@ -27,6 +27,14 @@ public class RentDAO extends EgovAbstractMapper {
         return selectList("selectOneOfRent", vo);
     }
 
+    public List<RentVO> checkRentDetailOfMember(RentVO vo){
+        return selectList("checkRentDetailOfMember", vo);
+    }
+
+    public List<RentVO> checkRentDetailOfGoods(RentVO vo){
+        return selectList("checkRentDetailOfGoods", vo);
+    }
+
     public RentVO checkRentDetail(RentVO vo){
         return selectOne("checkRentDetail", vo);
     }

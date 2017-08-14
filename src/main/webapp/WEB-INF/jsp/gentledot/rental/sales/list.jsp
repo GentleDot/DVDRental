@@ -1,11 +1,10 @@
 <%@page import="net.gentledot.rental.vo.SalesVO"%>
-<%@ page import="java.util.List" %>
-<%@ page import="org.springframework.web.servlet.support.RequestContextUtils" %>
 <%@ page import="net.gentledot.utils.Tools" %>
-<%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.text.DecimalFormat" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.List" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+		 pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko-KR">
 <%
@@ -119,21 +118,13 @@
 								<%=Tools.customToEmptyBlank(sales.getsDate(), "")%>
 							</td>
 							<td>
-								<%= Tools.customToEmptyBlank(sales.getmId(), "")%>
+								<a href="<%=contextPath%>/sales/rentStatusOfMember.do?mId=<%= Tools.customToEmptyBlank(sales.getmId(), "") %>&rentdate=<%= sales.getsDate().substring(0, 6) %>"><%= Tools.customToEmptyBlank(sales.getmId(), "")%>
+								</a>
 							</td>
 							<td>
-							<%
-								if(sales.getStId() == null){
-							%>
-								(<%= Tools.customToEmptyBlank(sales.getpId(), "")%>)
-							<%
-								}else{
-							%>
+								<a href="<%=contextPath%>/sales/rentStatusOfGoods.do?stId=<%= Tools.customToEmptyBlank(sales.getStId(), "") %>&rentdate=<%= sales.getsDate().substring(0, 6) %>">
 								<%= Tools.customToEmptyBlank(sales.getStId(), "")%>
-
-							<%
-								}
-							%>
+								</a>
 							</td>
 							<td class="gains charge">
 								<%= Tools.customToEmptyBlank(sales.getsCharge(), "0")%>

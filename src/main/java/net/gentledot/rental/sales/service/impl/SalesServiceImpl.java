@@ -23,17 +23,18 @@ public class SalesServiceImpl implements SalesService {
 	SalesDAO dao;
 
 	public Map<String, Object> getSalesList(String sDate, int pageSize, int pageNo, int pageScope){
+		int totalCnt = dao.totalCountOfSalesList();
+
 		// list 생성
 		SalesVO vo = new SalesVO();
 		vo.setsDate(sDate);
 		vo.setPageNo(pageNo);
-		vo.setPageSize(pageSize);
-		
+		vo.setPageSize(totalCnt);
+
 		List<SalesVO> returnList = dao.selectSalesList(vo);
-		
+
 		// pagination 생성
-		int totalCnt = dao.totalCountOfSalesList();
-		Pagination pag = new Pagination(pageSize, pageNo, pageScope, totalCnt);
+		Pagination pag = new Pagination(totalCnt, pageNo, pageScope, totalCnt);
 		pag.setPaging();
 		
 		// return 할 map에 list와 pagination 담기

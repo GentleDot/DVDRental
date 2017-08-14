@@ -33,9 +33,9 @@
 		<section class="row">
 			<div class="col-md-8 col-md-offset-2">
 				<h2>제품 목록</h2>
-				<form action="<%= contextPath %>/product/productList.do" method="post" class="form-inline text-center" name="sendSearchKeyword">
+				<form action="<%= contextPath %>/product/productList.do" method="post" class="form-inline" name="sendSearchKeyword">
 					<fieldset class="form-group">
-						<legend class="sr-only">제품 검색</legend>
+						<legend>제품 검색</legend>
 						<div class="form-group">
 							<label for="category" class="sr-only">검색 설정 (ID / 제품명)</label>
 							<select name="category" id="category" class="form-control">

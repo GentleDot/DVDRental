@@ -10,6 +10,8 @@ public interface RentService {
 	public Map<String, Object> getRentListByRentdate(String rRentdate, int pageSize, int pageNo, int pageScope);
 	public Map<String, Object> getRentListByItem(String stId, int pageSize, int pageNo, int pageScope);
 	public List<RentVO> selectOneOfRent(RentVO vo);
+	public List<RentVO> checkRentDetailOfMember(RentVO vo);
+	public List<RentVO> checkRentDetailOfGoods(RentVO vo);
 	public RentVO checkRentDetail(RentVO vo);
 	public int addRent(RentVO vo);
 	public int updateRent(RentVO vo);
